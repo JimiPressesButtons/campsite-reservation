@@ -30,9 +30,11 @@ Campsites types(array of objects), alerts(string), activities(string)
 
 ####Campsites
 
-Type of Campsite(array of string), occupied(boolean), dates reserved (number??)
+Type of Campsite(array of string), occupied(boolean), dates reserved ()
 
-QUESTION, HOW DO I ASSIGN RESERVED DATES??
+####Reservation
+
+Have the user be assigned a campsite through a reservation model. 
 
 ## APIs, Plugins, Libraries, and Frameworks
 
