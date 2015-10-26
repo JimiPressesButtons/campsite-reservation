@@ -19,5 +19,15 @@
     .nav-bar .user-dropdown img {
       border-radius: 50%; }
 
+#selectList {
+  background-color: #333333;
+  color: white; }
+
+#map {
+  background-color: blue;
+  height: 25em; }
+
 body {
   background-color: #EEEEEE; }
+  body #main {
+    padding-top: 5em; }

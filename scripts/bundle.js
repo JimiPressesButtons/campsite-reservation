@@ -31747,6 +31747,63 @@ module.exports = React.createClass({
 
 var React = require('react');
 var Backbone = require('backbone');
+var ParkModel = require('../models/ParkModel.js');
+
+module.exports = React.createClass({
+	displayName: 'exports',
+
+	getInitialState: function getInitialState() {
+		return {
+			parkList: []
+		};
+	},
+	componentWillMount: function componentWillMount() {
+		var _this = this;
+
+		var parkQuery = new Parse.Query(ParkModel);
+		parkQuery.find().then(function (park) {
+			_this.setState({ parkList: park });
+		}, function (err) {
+			console.log(err);
+		});
+	},
+	render: function render() {
+		var parks = this.state.parkList.map(function (park) {
+			return React.createElement(
+				'li',
+				{ className: 'listItem', key: park.id },
+				park.get('name')
+			);
+		});
+		return React.createElement(
+			'div',
+			{ className: 'container' },
+			React.createElement(
+				'div',
+				{ className: 'row' },
+				React.createElement(
+					'div',
+					{ id: 'selectList', className: 'four columns' },
+					React.createElement(
+						'ul',
+						null,
+						' ',
+						parks,
+						' '
+					)
+				),
+				React.createElement('div', { id: 'map', className: 'eight columns' })
+			)
+		);
+	}
+
+});
+
+},{"../models/ParkModel.js":165,"backbone":1,"react":160}],163:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
+var Backbone = require('backbone');
 
 module.exports = React.createClass({
 	displayName: 'exports',
@@ -31757,22 +31814,29 @@ module.exports = React.createClass({
 
 });
 
-},{"backbone":1,"react":160}],163:[function(require,module,exports){
+},{"backbone":1,"react":160}],164:[function(require,module,exports){
 'use strict';
 var React = require('react');
 var ReactDOM = require('react-dom');
 var Backbone = require('backbone');
 
+Parse.initialize("9sd2q0JxfBh6eWh1PVgYsW2wrFndlmUlT7tYa35d", "Palf0mZkw2r2fS53EDabTT3TIPXAxid86PfP4nZb");
+
 var NavComponent = require('./components/NavComponent.js');
 var ReserveHomeComponent = require('./components/ReserveHomeComponent.js');
+var ParkSelectionComponent = require('./components/ParkSelectionComponent.js');
 var main = document.getElementById('main');
 
 var Router = Backbone.Router.extend({
 	routes: {
-		'': 'home'
+		'': 'home',
+		'park': 'park'
 	},
 	home: function home() {
 		ReactDOM.render(React.createElement(ReserveHomeComponent, null), main);
+	},
+	park: function park() {
+		ReactDOM.render(React.createElement(ParkSelectionComponent, null), main);
 	}
 });
 
@@ -31781,7 +31845,14 @@ Backbone.history.start();
 
 ReactDOM.render(React.createElement(NavComponent, null), document.getElementById('nav'));
 
-},{"./components/NavComponent.js":161,"./components/ReserveHomeComponent.js":162,"backbone":1,"react":160,"react-dom":5}]},{},[163])
+},{"./components/NavComponent.js":161,"./components/ParkSelectionComponent.js":162,"./components/ReserveHomeComponent.js":163,"backbone":1,"react":160,"react-dom":5}],165:[function(require,module,exports){
+'use strict';
+
+module.exports = Parse.Object.extend({
+  className: 'Parks'
+});
+
+},{}]},{},[164])
 
 
 //# sourceMappingURL=bundle.js.map
