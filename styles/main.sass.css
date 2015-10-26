@@ -1,0 +1,23 @@
+.nav-bar {
+  height: 65px;
+  padding: 0.5em 1em;
+  overflow: hidden;
+  background-color: #333333;
+  color: white; }
+  .nav-bar .image-div {
+    height: 4em;
+    float: left; }
+    .nav-bar .image-div a span {
+      color: white;
+      text-decoration: none !important;
+      font-size: 2em; }
+    .nav-bar .image-div img {
+      height: 100%; }
+  .nav-bar .user-dropdown {
+    float: right;
+    margin-top: 0.5em; }
+    .nav-bar .user-dropdown img {
+      border-radius: 50%; }
+
+body {
+  background-color: #EEEEEE; }

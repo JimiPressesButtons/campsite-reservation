@@ -25,6 +25,7 @@
   "dependencies": {
     "backbone": "^1.2.3",
     "jquery": "^2.1.4",
+    "normalize": "^0.3.1",
     "react": "^0.14.0",
     "react-dom": "^0.14.0",
     "skeleton": "^0.1.2"

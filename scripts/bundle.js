@@ -31708,21 +31708,80 @@ module.exports = require('./lib/React');
 var React = require('react');
 var Backbone = require('backbone');
 
+module.exports = React.createClass({
+	displayName: 'exports',
+
+	render: function render() {
+		return React.createElement(
+			'div',
+			{ className: 'nav-bar' },
+			React.createElement(
+				'div',
+				{ className: 'image-div' },
+				React.createElement(
+					'a',
+					{ href: '#' },
+					React.createElement('img', { className: 'logo', src: '../../images/tpwd-logo-large.gif' }),
+					React.createElement(
+						'span',
+						null,
+						'Texas Parks & WildLife'
+					)
+				)
+			),
+			React.createElement(
+				'div',
+				{ className: 'user-dropdown' },
+				React.createElement(
+					'a',
+					{ href: '#' },
+					React.createElement('img', { className: 'avatar size32', src: '../../images/lIHOd7iM_normal.jpg' })
+				)
+			)
+		);
+	}
+});
+
 },{"backbone":1,"react":160}],162:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
+var Backbone = require('backbone');
+
+module.exports = React.createClass({
+	displayName: 'exports',
+
+	render: function render() {
+		return React.createElement('div', null);
+	}
+
+});
+
+},{"backbone":1,"react":160}],163:[function(require,module,exports){
 'use strict';
 var React = require('react');
 var ReactDOM = require('react-dom');
 var Backbone = require('backbone');
-var NavComponent = require('./components/NavComponent');
 
-var Router = new Backbone.Router.extend({});
+var NavComponent = require('./components/NavComponent.js');
+var ReserveHomeComponent = require('./components/ReserveHomeComponent.js');
+var main = document.getElementById('main');
+
+var Router = Backbone.Router.extend({
+	routes: {
+		'': 'home'
+	},
+	home: function home() {
+		ReactDOM.render(React.createElement(ReserveHomeComponent, null), main);
+	}
+});
 
 var r = new Router();
 Backbone.history.start();
 
-ReactDom.render(React.createElement(NavComponent, null), document.getElementById('nav'));
+ReactDOM.render(React.createElement(NavComponent, null), document.getElementById('nav'));
 
-},{"./components/NavComponent":161,"backbone":1,"react":160,"react-dom":5}]},{},[162])
+},{"./components/NavComponent.js":161,"./components/ReserveHomeComponent.js":162,"backbone":1,"react":160,"react-dom":5}]},{},[163])
 
 
 //# sourceMappingURL=bundle.js.map

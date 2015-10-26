@@ -1,0 +1,28 @@
+@import 'variables';
+
+.nav-bar{
+	height: 65px;
+	padding: 0.5em 1em;
+	overflow: hidden;
+	background-color: $baseTone;
+	color: white;
+	.image-div{
+		height:4em;
+		float: left;
+		a span{
+			color: white;
+			text-decoration: none !important;
+			font-size: 2em;
+		}
+		img{
+			height:100%;
+		}
+	}
+	.user-dropdown{
+		float: right;
+		margin-top: 0.5em;
+		img{
+			border-radius: 50%;
+		}
+	}
+}
