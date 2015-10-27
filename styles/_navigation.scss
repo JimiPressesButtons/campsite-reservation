@@ -2,12 +2,11 @@
 
 .nav-bar{
 	height: 65px;
-	padding: 0.5em 1em;
-	overflow: hidden;
+	padding: 5px 1em;
 	background-color: $baseTone;
 	color: white;
 	.image-div{
-		height:4em;
+		height:60px;
 		float: left;
 		a span{
 			color: white;

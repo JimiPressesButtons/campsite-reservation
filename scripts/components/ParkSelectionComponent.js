@@ -30,19 +30,32 @@ module.exports = React.createClass({
 				);
 			}
 		);
+
 		return(
 			<div className='container'>
 				<div className='row'>
 					<div id='selectList' className ='four columns'>
 						<ul> {parks} </ul>
 					</div>
-					<div id='map'className ='eight columns'></div>
-					{this.state.parkSelected ? <ParkDetailsComponent parkId={this.state.parkSelected}/> : null}
+					<div id='map'className ='eight columns'>
+
+
+					</div>
+					{this.state.parkSelected ? <ParkDetailsComponent parkId={this.state.parkSelected} onClose={this.onParkClose}/> : null}
 				</div>
 			</div>
 		);
 	},
 	onParkSelect: function(u){
 		this.setState({parkSelected: u});
+	},
+	onParkClose:function(){
+		console.log('hihih');
+		this.setState({parkSelected: null});
+	},
+	initMap: function() {
+		map = new google.maps.Map(document.getElementById('map'), {
+			center: {lat: -34.397, lng: 150.644},zoom: 8
+		});
 	}
 });

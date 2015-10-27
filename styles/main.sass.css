@@ -1,11 +1,10 @@
 .nav-bar {
   height: 65px;
-  padding: 0.5em 1em;
-  overflow: hidden;
+  padding: 5px 1em;
   background-color: #333333;
   color: white; }
   .nav-bar .image-div {
-    height: 4em;
+    height: 60px;
     float: left; }
     .nav-bar .image-div a span {
       color: white;
@@ -34,10 +33,13 @@
 
 #parkDetail {
   margin-left: 8%;
-  height: 10em;
+  padding: 1em;
   background-color: #ECE9E6;
   border: 0.25em solid #78695b;
   border-top: none; }
+  #parkDetail .closeIcon {
+    float: right;
+    font-size: 1em; }
 
 body {
   background-color: white; }

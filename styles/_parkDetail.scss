@@ -2,8 +2,12 @@
 
 #parkDetail{
 	margin-left:8%;
-	height: 10em;
+	padding: 1em;
 	background-color:$boxNormal;
 	border: $border;
 	border-top:none;
+	.closeIcon{
+		float: right;
+		font-size: 1em;
+	}
 }

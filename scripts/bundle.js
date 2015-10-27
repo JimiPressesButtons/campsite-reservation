@@ -31773,12 +31773,25 @@ module.exports = React.createClass({
 		return React.createElement(
 			'div',
 			{ id: 'parkDetail', className: 'seven columns' },
+			React.createElement('img', { className: 'closeIcon', onClick: this.closePark, src: '../../images/ic_highlight_off_18pt_2x.png' }),
 			React.createElement(
-				'h2',
+				'h3',
 				null,
 				this.state.parkName
+			),
+			React.createElement(
+				'button',
+				{ onClick: this.selectPark },
+				'Select'
 			)
 		);
+	},
+	selectPark: function selectPark() {
+		console.log('in selectPark');
+	},
+	closePark: function closePark() {
+		console.log('in closePark');
+		this.props.onClose();
 	}
 });
 
@@ -31820,6 +31833,7 @@ module.exports = React.createClass({
 				park.get('name')
 			);
 		});
+
 		return React.createElement(
 			'div',
 			{ className: 'container' },
@@ -31838,12 +31852,21 @@ module.exports = React.createClass({
 					)
 				),
 				React.createElement('div', { id: 'map', className: 'eight columns' }),
-				this.state.parkSelected ? React.createElement(ParkDetailsComponent, { parkId: this.state.parkSelected }) : null
+				this.state.parkSelected ? React.createElement(ParkDetailsComponent, { parkId: this.state.parkSelected, onClose: this.onParkClose }) : null
 			)
 		);
 	},
 	onParkSelect: function onParkSelect(u) {
 		this.setState({ parkSelected: u });
+	},
+	onParkClose: function onParkClose() {
+		console.log('hihih');
+		this.setState({ parkSelected: null });
+	},
+	initMap: function initMap() {
+		map = new google.maps.Map(document.getElementById('map'), {
+			center: { lat: -34.397, lng: 150.644 }, zoom: 8
+		});
 	}
 });
 

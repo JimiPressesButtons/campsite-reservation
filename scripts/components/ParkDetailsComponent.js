@@ -23,9 +23,18 @@ module.exports = React.createClass({
 	render: function(){
 		return(
 			<div id= 'parkDetail'className ='seven columns'> 
-				<h2>{this.state.parkName}</h2>
+				<img className='closeIcon' onClick={this.closePark} src='../../images/ic_highlight_off_18pt_2x.png' />
+				<h3>{this.state.parkName}</h3>
+				<button onClick={this.selectPark}>Select</button>
 
 			</div>
 		);
+	},
+	selectPark: function(){
+		console.log('in selectPark');
+	},
+	closePark:function(){
+		console.log('in closePark');
+		this.props.onClose();
 	}
 });
