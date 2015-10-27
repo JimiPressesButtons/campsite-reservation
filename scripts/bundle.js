@@ -31747,14 +31747,34 @@ module.exports = React.createClass({
 
 var React = require('react');
 var Backbone = require('backbone');
+
+module.exports = React.createClass({
+	displayName: 'exports',
+
+	render: function render() {
+		React.createElement(
+			'div',
+			null,
+			' '
+		);
+	}
+});
+
+},{"backbone":1,"react":160}],163:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
+var Backbone = require('backbone');
 var ParkModel = require('../models/ParkModel.js');
+var ParkDetailsComponent = require('./ParkDetailsComponent.js');
 
 module.exports = React.createClass({
 	displayName: 'exports',
 
 	getInitialState: function getInitialState() {
 		return {
-			parkList: []
+			parkList: [],
+			parkSelected: null
 		};
 	},
 	componentWillMount: function componentWillMount() {
@@ -31768,10 +31788,13 @@ module.exports = React.createClass({
 		});
 	},
 	render: function render() {
+		var _this2 = this;
+
 		var parks = this.state.parkList.map(function (park) {
+			var boundItemClick = _this2.onParkSelect.bind(_this2, park.id);
 			return React.createElement(
-				'li',
-				{ className: 'listItem', key: park.id },
+				'button',
+				{ onClick: boundItemClick, className: 'listItem', key: park.id },
 				park.get('name')
 			);
 		});
@@ -31795,11 +31818,14 @@ module.exports = React.createClass({
 				React.createElement('div', { id: 'map', className: 'eight columns' })
 			)
 		);
+	},
+	onParkSelect: function onParkSelect(u) {
+		this.state.parkSelected = u;
+		console.log(this.state.parkSelected);
 	}
-
 });
 
-},{"../models/ParkModel.js":165,"backbone":1,"react":160}],163:[function(require,module,exports){
+},{"../models/ParkModel.js":166,"./ParkDetailsComponent.js":162,"backbone":1,"react":160}],164:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -31814,7 +31840,7 @@ module.exports = React.createClass({
 
 });
 
-},{"backbone":1,"react":160}],164:[function(require,module,exports){
+},{"backbone":1,"react":160}],165:[function(require,module,exports){
 'use strict';
 var React = require('react');
 var ReactDOM = require('react-dom');
@@ -31845,14 +31871,14 @@ Backbone.history.start();
 
 ReactDOM.render(React.createElement(NavComponent, null), document.getElementById('nav'));
 
-},{"./components/NavComponent.js":161,"./components/ParkSelectionComponent.js":162,"./components/ReserveHomeComponent.js":163,"backbone":1,"react":160,"react-dom":5}],165:[function(require,module,exports){
+},{"./components/NavComponent.js":161,"./components/ParkSelectionComponent.js":163,"./components/ReserveHomeComponent.js":164,"backbone":1,"react":160,"react-dom":5}],166:[function(require,module,exports){
 'use strict';
 
 module.exports = Parse.Object.extend({
   className: 'Parks'
 });
 
-},{}]},{},[164])
+},{}]},{},[165])
 
 
 //# sourceMappingURL=bundle.js.map

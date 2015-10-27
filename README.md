@@ -40,4 +40,29 @@ Have the user be assigned a campsite through a reservation model.
 
 Google Maps, SASS, React, Backbone, Skeleton or Materalize. 
 
+##Code Standards
 
+* Proper indentation with tabs.
+* Singles quotes in JavaScript.
+* Double quotes in HTML/JSX.
+* CamelCase in JavaScript.
+* Dash-case in CSS.
+* 'Get Skeleton' for CSS framework.
+*  http://getskeleton.com/
+* All components should have comments describing them at the top of the file:
+    * What they are.
+    * What properties are required.
+    * What type is each property.
+* Suffix all component files names with 'Component'.
+* Component variable names should be equal to that file name.
+* Classes should be capitalized and suffixed with their type:
+    * Models
+    * Components
+    * Collections
+* Descriptive CSS class names.
+* Descriptive git commits and branch names.
+
+##Style Guide
+
+*All colors that aren't black or white should be assign a variable
+*all borders have a width of 0.25em

@@ -1,8 +1,13 @@
 @import 'variables';
 
 #selectList{
-	background-color: $baseTone;
-	color: white;
+	background-color: $boxNormal;
+	border: $border;
+	.listItem{
+		list-style-type: none;
+		padding-left: 0.25em;
+		border-bottom: $border;
+	}
 }
 #map{
 	background-color: blue;

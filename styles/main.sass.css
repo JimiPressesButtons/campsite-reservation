@@ -20,14 +20,18 @@
       border-radius: 50%; }
 
 #selectList {
-  background-color: #333333;
-  color: white; }
+  background-color: #ECE9E6;
+  border: 0.25em solid #78695b; }
+  #selectList .listItem {
+    list-style-type: none;
+    padding-left: 0.25em;
+    border-bottom: 0.25em solid #78695b; }
 
 #map {
   background-color: blue;
   height: 25em; }
 
 body {
-  background-color: #EEEEEE; }
+  background-color: white; }
   body #main {
     padding-top: 5em; }
