@@ -26,7 +26,7 @@ module.exports = React.createClass({
 			(park)=>{
 				let boundItemClick = this.onParkSelect.bind(this, park.id);
 				return(
-					<button onClick={boundItemClick} className="listItem" key={park.id}>{park.get('name')}</button> 
+					<div onClick={boundItemClick} className="listItem" key={park.id}>{park.get('name')}</div> 
 				);
 			}
 		);
@@ -36,15 +36,13 @@ module.exports = React.createClass({
 					<div id='selectList' className ='four columns'>
 						<ul> {parks} </ul>
 					</div>
-					<div id='map'className ='eight columns'>
-
-					</div>
+					<div id='map'className ='eight columns'></div>
+					{this.state.parkSelected ? <ParkDetailsComponent parkId={this.state.parkSelected}/> : null}
 				</div>
 			</div>
 		);
 	},
 	onParkSelect: function(u){
-		this.state.parkSelected = u;
-		console.log(this.state.parkSelected);
+		this.setState({parkSelected: u});
 	}
 });

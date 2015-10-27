@@ -28,8 +28,16 @@
     border-bottom: 0.25em solid #78695b; }
 
 #map {
-  background-color: blue;
+  background-color: #ECE9E6;
+  border: 0.25em solid #78695b;
   height: 25em; }
+
+#parkDetail {
+  margin-left: 8%;
+  height: 10em;
+  background-color: #ECE9E6;
+  border: 0.25em solid #78695b;
+  border-top: none; }
 
 body {
   background-color: white; }

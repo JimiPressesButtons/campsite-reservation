@@ -31747,20 +31747,42 @@ module.exports = React.createClass({
 
 var React = require('react');
 var Backbone = require('backbone');
+var ParkModel = require('../models/ParkModel.js');
 
 module.exports = React.createClass({
 	displayName: 'exports',
 
+	getInitialState: function getInitialState() {
+		return {
+			parkName: null,
+			parkDescription: null,
+			parkId: null
+		};
+	},
+	componentWillMount: function componentWillMount() {
+		var _this = this;
+
+		var parkInfo = new Parse.Query(ParkModel);
+		parkInfo.get(this.props.parkId).then(function (park) {
+			_this.setState({ parkName: park.get('name') });
+			// this.setState({parkDescription : park.get('description')});
+			// this.setState({parkId : park.id});
+		});
+	},
 	render: function render() {
-		React.createElement(
+		return React.createElement(
 			'div',
-			null,
-			' '
+			{ id: 'parkDetail', className: 'seven columns' },
+			React.createElement(
+				'h2',
+				null,
+				this.state.parkName
+			)
 		);
 	}
 });
 
-},{"backbone":1,"react":160}],163:[function(require,module,exports){
+},{"../models/ParkModel.js":166,"backbone":1,"react":160}],163:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -31793,7 +31815,7 @@ module.exports = React.createClass({
 		var parks = this.state.parkList.map(function (park) {
 			var boundItemClick = _this2.onParkSelect.bind(_this2, park.id);
 			return React.createElement(
-				'button',
+				'div',
 				{ onClick: boundItemClick, className: 'listItem', key: park.id },
 				park.get('name')
 			);
@@ -31815,13 +31837,13 @@ module.exports = React.createClass({
 						' '
 					)
 				),
-				React.createElement('div', { id: 'map', className: 'eight columns' })
+				React.createElement('div', { id: 'map', className: 'eight columns' }),
+				this.state.parkSelected ? React.createElement(ParkDetailsComponent, { parkId: this.state.parkSelected }) : null
 			)
 		);
 	},
 	onParkSelect: function onParkSelect(u) {
-		this.state.parkSelected = u;
-		console.log(this.state.parkSelected);
+		this.setState({ parkSelected: u });
 	}
 });
 
