@@ -3,6 +3,7 @@
 #selectList{
 	background-color: $boxNormal;
 	border: $border;
+	min-height: 30em;
 	.listItem{
 		list-style-type: none;
 		padding-left: 0.25em;
@@ -13,4 +14,7 @@
 	background-color: $boxNormal;
 	border: $border;
 	height: 25em;
+}
+#filter{
+	@extend #map;
 }

@@ -16,7 +16,7 @@ module.exports = React.createClass({
 			(park)=>{
 				this.setState({parkName : park.get('name')});
 				// this.setState({parkDescription : park.get('description')});
-				// this.setState({parkId : park.id});
+				this.setState({parkId : park.id});
 			}
 		);
 	},
@@ -32,6 +32,7 @@ module.exports = React.createClass({
 	},
 	selectPark: function(){
 		console.log('in selectPark');
+		this.props.router.navigate('#campsite/'+this.state.parkId, {trigger: true});
 	},
 	closePark:function(){
 		console.log('in closePark');
