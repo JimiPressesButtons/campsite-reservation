@@ -24,8 +24,14 @@
   },
   "dependencies": {
     "backbone": "^1.2.3",
+    "gulp-prompt": "^0.1.2",
+    "gulp-rimraf": "^0.2.0",
     "jquery": "^2.1.4",
+    "materialize-css": "^0.97.1",
+    "minimist": "^1.2.0",
+    "moment": "^2.10.6",
     "react": "^0.14.0",
+    "react-calendar-pane": "0.0.20",
     "react-dom": "^0.14.0",
     "skeleton-css": "^2.0.4"
   }

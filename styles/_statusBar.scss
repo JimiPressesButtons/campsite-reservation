@@ -1,0 +1,13 @@
+@import 'variables';
+
+#statusBar{
+	height: 3em;
+	background-color: green;
+	border: $border;
+	margin-bottom: 5em;
+	.statusTag{
+		float:left;
+		width: 25%;
+		color: white;
+	}
+}

@@ -10,12 +10,8 @@
 		border-bottom: $border;
 	}
 }
-#map{
-	float: right;
+#calendar{
 	background-color: $boxNormal;
 	border: $border;
 	height: 25em;
-}
-#filter{
-	@extend #map;
 }

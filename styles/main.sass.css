@@ -28,9 +28,34 @@
     border-bottom: 0.25em solid #78695b; }
 
 #map, #filter {
+  float: right;
   background-color: #ECE9E6;
   border: 0.25em solid #78695b;
   height: 25em; }
+
+#selectList {
+  background-color: #ECE9E6;
+  border: 0.25em solid #78695b;
+  min-height: 30em; }
+  #selectList .listItem {
+    list-style-type: none;
+    padding-left: 0.25em;
+    border-bottom: 0.25em solid #78695b; }
+
+#calendar {
+  background-color: #ECE9E6;
+  border: 0.25em solid #78695b;
+  height: 25em; }
+
+#statusBar {
+  height: 3em;
+  background-color: green;
+  border: 0.25em solid #78695b;
+  margin-bottom: 5em; }
+  #statusBar .statusTag {
+    float: left;
+    width: 25%;
+    color: white; }
 
 #parkDetail {
   margin-left: 8%;

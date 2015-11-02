@@ -1,13 +1,17 @@
 var React= require('react');
 var Backbone = require('backbone');
+var _ = require('backbone/node_modules/underscore');
 var ParkModel = require('../models/ParkModel.js');
 var CampsiteModel = require('../models/CampsiteModel.js');
 var ParkDetailsComponent =require('./ParkDetailsComponent.js');
+var StatusBarComponent = require('./StatusBarComponent.js');
 
 module.exports = React.createClass({
 	getInitialState: function(){
 		return{
+			map: null,
 			parkList: [],
+			markerList: [],
 			parkSelected: null
 		};
 	},
@@ -16,6 +20,19 @@ module.exports = React.createClass({
 		parkQuery.find().then(
 			(park) =>{
 				this.setState({parkList:park});
+				park.forEach(
+					(park)=>{
+						var myLatLng = {lat: park.get('lat'), lng: park.get('lng')};
+						var marker = new google.maps.Marker({
+							position: myLatLng,
+							map: this.map,
+							title: park.get('name')
+						});
+						marker.addListener('click', () => {
+							this.setState({parkSelected: park.id});
+							console.log('click', park.id);
+						});
+					})
 			},
 			(err) =>{
 				console.log(err);
@@ -27,13 +44,9 @@ module.exports = React.createClass({
 		this.map = new google.maps.Map(this.refs.map, {
 			center: texas,
 			zoom: 6,
-			zoomControl: true,
+			scrollwheel: false,
     		mapTypeId: google.maps.MapTypeId.TERRAIN
 		});
-		// var marker = new google.maps.Marker({
-		//     position: (-25.363882,131.044922),
-		//     title:"Hello World!"
-		// });
 	},
 	render: function(){
 		var parks = this.state.parkList.map(
@@ -44,22 +57,28 @@ module.exports = React.createClass({
 				);
 			}
 		);
+		var markerQuery = new Parse.Query(ParkModel);
+		markerQuery.equalTo()
 
 		return(
 			<div className='container'>
 				<div className='row'>
-					<div id='selectList' className ='four columns'>
+					<StatusBarComponent status='parkSelect'/>
+					<div id='selectList' className ='three columns'>
+						<form onSubmit={this.onSearchPark}>
+							<input ref='searchPark' placeholder='By Park Name' type='text' />
+						</form>
 						<ul> {parks} </ul>
 					</div>
-					<div ref='map'id='map'className ='eight columns'>
+					<div ref='map'id='map'className ='eight columns'></div>
 
-
-					</div>
 					{this.state.parkSelected ? <ParkDetailsComponent router = {this.props.router} parkId={this.state.parkSelected} onClose={this.onParkClose}/> : null}
-					<div ref='filter' id='filter' className = 'eight columns'>
+
+					<div ref='filter' id='filter' className = 'seven columns'>
 						<h3>Filter</h3>
 						<form onSubmit={this.onFilter}>
-							<select ref='activity' id='activityList' className='three columns' placeholder='By Activity'>
+							<select ref='activity' id='activityList' className='three columns'>
+								<option value='' disabled selected>Select your option</option>
 								<option ref='beachOceanSwimming' value='Beach/Ocean Swimming' key='1'>Beach / Ocean Swimming</option>
 								<option ref='biking' value='Biking' key='2'>Biking</option>
 								<option ref='birding' value='Birding' key='3'>Birding</option>
@@ -84,10 +103,9 @@ module.exports = React.createClass({
 								<option ref='starGazing' value='Star Gazing' key='22'>Star Gazing</option>
 								<option ref='wheelchairAccessibility' value='Wheelchair Accessibility' key='23'>Wheelchair Accessibility</option>
 							</select>
-							<div>
-								<input ref='searchPark' placeholder='By Park Name' type='text' />
-							</div>
+							
 							<select ref='campsite' id='campsiteList'>
+								<option value='' disabled selected>Select your option</option>
 								<option ref='tent' value='tent'>Tent</option>
 								<option ref='wtr' value='wtr'>Water</option>
 								<option ref='wtr,elec' value='wtr,elec'>Water, Electrical</option>
@@ -114,23 +132,52 @@ module.exports = React.createClass({
 	onParkClose:function(){
 		this.setState({parkSelected: null});
 	},
+	onSearchPark: function(e){
+		e.preventDefault();
+		console.log((this.refs.searchPark.value).toLowerCase());
+	},
+	createMarker: function(){
+		console.log('createMarker');
+		var myLatLng = {lat: this.get('lat'), lng: this.get('lng')};
+		var marker = new google.maps.Marker({
+			position: myLatLng,
+			map: this.map,
+			title: this.get('name')
+		});
+	},
 	onFilter: function(e){
 		e.preventDefault();
-		console.log(this.refs.activity.value);
-		var activityQuery = new Parse.Query(ParkModel);
-		var	campsiteQuery = new Parse.Query(CampsiteModel);
-			
-		activityQuery.equalTo('activities', this.refs.activity.value).find()
-		.then(
-			(parkObject)=>{
-				this.setState({parkList:parkObject});
+		var parkQuery = new Parse.Query(ParkModel);
+		parkQuery.equalTo('activities', this.refs.activity.value);
+
+		var	campsiteQuery = new Parse.Query(CampsiteModel);		
+		campsiteQuery.matchesQuery('parkId',parkQuery);
+		campsiteQuery.equalTo('type',this.refs.campsite.value);
+		campsiteQuery.include('parkId');
+		campsiteQuery.find().then(
+			(parkList)=>{
+				var campsWithPark = _.filter(parkList, function(campsite) {
+					return campsite.get('parkId');
+				});
+				var campsByPark = _.groupBy(campsWithPark, function(campsite){
+					return campsite.get('parkId').id;
+				})
+				var parks = [];
+				for(var propertyName in campsByPark){
+					parks.push(campsByPark[propertyName][0].get('parkId'));
+				}
+				this.setState({parkList:parks});
+				// parks.forEach(
+				// 	(park)=>{
+				// 		let myLatLng = {lat: campsByPark[propertyName][0].get('lat'), lng: campsByPark[propertyName][0].get('lng')};
+				// 		let marker = new google.maps.Marker({
+				// 			position: myLatLng,
+				// 			map: this.map,
+				// 			title: campsByPark[propertyName][0].get('name')
+				// 		});
+				// })
 			}
-			// campsiteQuery.equalTo('type',this.refs.campsite.value).find()
-			// 	.then(
-			// 		(parkObject)=>{
-			// 			this.setState({parkList:parkObject});
-			// 		}
-			// 	);
 		);
+
 	}		
 });
