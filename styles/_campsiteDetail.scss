@@ -1,0 +1,13 @@
+@import 'variables';
+
+#campsiteDetail{
+	margin-left:8%;
+	padding: 1em;
+	background-color:$boxNormal;
+	border: $border;
+	border-top:none;
+	.closeIcon{
+		float: right;
+		font-size: 1em;
+	}
+}

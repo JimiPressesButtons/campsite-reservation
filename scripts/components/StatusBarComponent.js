@@ -9,9 +9,9 @@ module.exports = React.createClass({
 	},
 	componentWillMount:function() {
 		if(this.props.status==='parkSelect'){
-			console.log('bye');
+
 		}else if(this.props.status==='campSelect'){
-			console.log('hi');
+
 		}
 	},
 	componentDidMount:function() {

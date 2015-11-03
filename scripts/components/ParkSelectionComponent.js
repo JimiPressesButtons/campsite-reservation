@@ -30,7 +30,6 @@ module.exports = React.createClass({
 						});
 						marker.addListener('click', () => {
 							this.setState({parkSelected: park.id});
-							console.log('click', park.id);
 						});
 					})
 			},
@@ -127,6 +126,8 @@ module.exports = React.createClass({
 		);
 	},
 	onParkSelect: function(u){
+		this.setState({parkSelected:null});
+		console.log(this.state.parkSelected);
 		this.setState({parkSelected: u});
 	},
 	onParkClose:function(){

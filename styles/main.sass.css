@@ -57,6 +57,16 @@
     width: 25%;
     color: white; }
 
+#campsiteDetail {
+  margin-left: 8%;
+  padding: 1em;
+  background-color: #ECE9E6;
+  border: 0.25em solid #78695b;
+  border-top: none; }
+  #campsiteDetail .closeIcon {
+    float: right;
+    font-size: 1em; }
+
 #parkDetail {
   margin-left: 8%;
   padding: 1em;

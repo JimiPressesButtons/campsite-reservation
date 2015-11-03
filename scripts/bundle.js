@@ -35147,11 +35147,49 @@ module.exports = require('./lib/React');
 
 var React = require('react');
 var Backbone = require('backbone');
+
+module.exports = React.createClass({
+	displayName: 'exports',
+
+	render: function render() {
+		return React.createElement(
+			'div',
+			{ id: 'campsiteDetail', className: 'seven columns' },
+			React.createElement('img', { className: 'closeIcon', onClick: this.closePark, src: '../../images/ic_highlight_off_18pt_2x.png' }),
+			React.createElement(
+				'h3',
+				null,
+				this.props.campsiteType
+			),
+			React.createElement(
+				'button',
+				{ onClick: this.selectCampsite },
+				'Select'
+			)
+		);
+	},
+	selectCampite: function selectCampite() {
+		console.log('in selectCampsite');
+		// this.props.router.navigate('#campsite/'+this.state.parkId, {trigger: true});
+	},
+	closePark: function closePark() {
+		console.log('in closePark');
+		this.props.onClose();
+	}
+});
+
+},{"backbone":1,"react":166}],168:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
+var Backbone = require('backbone');
+var _ = require('backbone/node_modules/underscore');
 var Calendar = require('../../node_modules/react-calendar-pane');
 var moment = require('../../node_modules/moment/min/moment.min.js');
 var CampsiteModel = require('../models/CampsiteModel.js');
 var ParkModel = require('../models/ParkModel.js');
 var StatusBarComponent = require('./StatusBarComponent.js');
+var CampsiteDetailsComponent = require('./CampsiteDetailsComponent.js');
 
 module.exports = React.createClass({
 	displayName: 'exports',
@@ -35159,6 +35197,7 @@ module.exports = React.createClass({
 	getInitialState: function getInitialState() {
 		return {
 			campsites: [],
+			campsiteSelected: null,
 			events: null
 		};
 	},
@@ -35167,16 +35206,31 @@ module.exports = React.createClass({
 
 		var campsitesQuery = new Parse.Query(CampsiteModel);
 		var targetParkModel = new ParkModel({ objectId: this.props.parkId });
-		console.log(targetParkModel.id);
-		campsitesQuery.equalTo('parkId', targetParkModel.id).find().then(function (campsite) {
-			_this.setState({ campsites: campsite });
-			console.log(campsite);
+		campsitesQuery.equalTo('parkId', targetParkModel).find().then(function (campsite) {
+			var campsByPark = _.groupBy(campsite, function (u) {
+				return u.get('type');
+			});
+			var campsites = [];
+			for (var propertyName in campsByPark) {
+				campsites.push(campsByPark[propertyName][0].get('type'));
+			}
+			_this.setState({ campsites: campsites });
 		}, function (err) {
 			console.log(err);
 		});
-		console.log(this.state.campsites);
 	},
 	render: function render() {
+		var _this2 = this;
+
+		// console.log(this.state.campsiteSelected);
+		var campsites = this.state.campsites.map(function (campsite) {
+			var boundItemClick = _this2.onCampsiteSelect.bind(_this2, campsite.id);
+			return React.createElement(
+				'div',
+				{ onClick: boundItemClick, className: 'listItem' },
+				campsite
+			);
+		});
 		return React.createElement(
 			'div',
 			{ className: 'container' },
@@ -35184,12 +35238,23 @@ module.exports = React.createClass({
 				'div',
 				{ className: 'row' },
 				React.createElement(StatusBarComponent, { status: 'campSelect' }),
-				React.createElement('div', { id: 'selectList', className: 'four columns' }),
+				React.createElement(
+					'div',
+					{ id: 'selectList', className: 'four columns' },
+					React.createElement(
+						'ul',
+						null,
+						' ',
+						campsites,
+						' '
+					)
+				),
 				React.createElement(
 					'div',
 					{ ref: 'calendar', id: 'calendar', className: 'seven columns' },
 					React.createElement(Calendar, { onSelect: this.onSelect })
-				)
+				),
+				this.state.campsiteSelected ? React.createElement(CampsiteDetailsComponent, { router: this.props.router, campsiteType: this.state.campsiteSelected, onClose: this.onCampsiteClose }) : null
 			)
 		);
 	},
@@ -35201,22 +35266,29 @@ module.exports = React.createClass({
 		}
 	},
 	eventQuery: function eventQuery(date) {
-		var _this2 = this;
+		var _this3 = this;
 
 		var currentDate = moment(date._d).format('MMMM Do YYYY');
 		var eventQuery = new Parse.Query('Event');
 		eventQuery.equalTo('dateOfEvent', currentDate);
 		eventQuery.find().then(function (events) {
-			_this2.setState({ events: events });
+			_this3.setState({ events: events });
 		}, function (err) {
 			console.log(err);
 		});
+	},
+	onCampsiteSelect: function onCampsiteSelect(u) {
+		console.log(u);
+		this.setState({ campsiteSelected: u });
+	},
+	onCampsiteClose: function onCampsiteClose() {
+		this.setState({ campsiteSelected: null });
 	}
 });
 
 // {this.state.parkSelected ? <ParkDetailsComponent router = {this.props.router} parkId={this.state.parkSelected} onClose={this.onParkClose}/> : null}
 
-},{"../../node_modules/moment/min/moment.min.js":5,"../../node_modules/react-calendar-pane":6,"../models/CampsiteModel.js":174,"../models/ParkModel.js":175,"./StatusBarComponent.js":172,"backbone":1,"react":166}],168:[function(require,module,exports){
+},{"../../node_modules/moment/min/moment.min.js":5,"../../node_modules/react-calendar-pane":6,"../models/CampsiteModel.js":175,"../models/ParkModel.js":176,"./CampsiteDetailsComponent.js":167,"./StatusBarComponent.js":173,"backbone":1,"backbone/node_modules/underscore":2,"react":166}],169:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -35256,7 +35328,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"backbone":1,"react":166}],169:[function(require,module,exports){
+},{"backbone":1,"react":166}],170:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -35310,7 +35382,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"../models/ParkModel.js":175,"backbone":1,"react":166}],170:[function(require,module,exports){
+},{"../models/ParkModel.js":176,"backbone":1,"react":166}],171:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -35347,7 +35419,6 @@ module.exports = React.createClass({
 				});
 				marker.addListener('click', function () {
 					_this.setState({ parkSelected: park.id });
-					console.log('click', park.id);
 				});
 			});
 		}, function (err) {
@@ -35617,6 +35688,8 @@ module.exports = React.createClass({
 		);
 	},
 	onParkSelect: function onParkSelect(u) {
+		this.setState({ parkSelected: null });
+		console.log(this.state.parkSelected);
 		this.setState({ parkSelected: u });
 	},
 	onParkClose: function onParkClose() {
@@ -35671,7 +35744,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"../models/CampsiteModel.js":174,"../models/ParkModel.js":175,"./ParkDetailsComponent.js":169,"./StatusBarComponent.js":172,"backbone":1,"backbone/node_modules/underscore":2,"react":166}],171:[function(require,module,exports){
+},{"../models/CampsiteModel.js":175,"../models/ParkModel.js":176,"./ParkDetailsComponent.js":170,"./StatusBarComponent.js":173,"backbone":1,"backbone/node_modules/underscore":2,"react":166}],172:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -35686,7 +35759,7 @@ module.exports = React.createClass({
 
 });
 
-},{"backbone":1,"react":166}],172:[function(require,module,exports){
+},{"backbone":1,"react":166}],173:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -35701,11 +35774,7 @@ module.exports = React.createClass({
 		};
 	},
 	componentWillMount: function componentWillMount() {
-		if (this.props.status === 'parkSelect') {
-			console.log('bye');
-		} else if (this.props.status === 'campSelect') {
-			console.log('hi');
-		}
+		if (this.props.status === 'parkSelect') {} else if (this.props.status === 'campSelect') {}
 	},
 	componentDidMount: function componentDidMount() {},
 	render: function render() {
@@ -35737,7 +35806,7 @@ module.exports = React.createClass({
 
 });
 
-},{"backbone":1,"react":166}],173:[function(require,module,exports){
+},{"backbone":1,"react":166}],174:[function(require,module,exports){
 'use strict';
 var React = require('react');
 var ReactDOM = require('react-dom');
@@ -35775,21 +35844,21 @@ Backbone.history.start();
 
 ReactDOM.render(React.createElement(NavComponent, null), document.getElementById('nav'));
 
-},{"./components/CampsiteSelectionComponent.js":167,"./components/NavComponent.js":168,"./components/ParkSelectionComponent.js":170,"./components/ReserveHomeComponent.js":171,"backbone":1,"jquery":4,"react":166,"react-dom":11}],174:[function(require,module,exports){
+},{"./components/CampsiteSelectionComponent.js":168,"./components/NavComponent.js":169,"./components/ParkSelectionComponent.js":171,"./components/ReserveHomeComponent.js":172,"backbone":1,"jquery":4,"react":166,"react-dom":11}],175:[function(require,module,exports){
 'use strict';
 
 module.exports = Parse.Object.extend({
   className: 'Campsites'
 });
 
-},{}],175:[function(require,module,exports){
+},{}],176:[function(require,module,exports){
 'use strict';
 
 module.exports = Parse.Object.extend({
   className: 'Parks'
 });
 
-},{}]},{},[173])
+},{}]},{},[174])
 
 
 //# sourceMappingURL=bundle.js.map
