@@ -6,12 +6,13 @@ var CampsiteModel = require('../models/CampsiteModel.js');
 var ParkDetailsComponent =require('./ParkDetailsComponent.js');
 var StatusBarComponent = require('./StatusBarComponent.js');
 
+var markerList= [];
+
 module.exports = React.createClass({
 	getInitialState: function(){
 		return{
 			map: null,
 			parkList: [],
-			markerList: [],
 			parkSelected: null
 		};
 	},
@@ -138,6 +139,9 @@ module.exports = React.createClass({
 		console.log((this.refs.searchPark.value).toLowerCase());
 	},
 	createMarker: function(){
+//MAKE THIS TO WHERE IT DELETES ALL MARKERS AND THEN MAKES THEM BASED OFF AN ARRAY. YOU DETERMINE WHAT MAKERS NEED TO GO INTO THE ARRAY BASED ON THE STATE. PASS AN ARRAY INTO THE FUNCTION. 
+
+
 		console.log('createMarker');
 		var myLatLng = {lat: this.get('lat'), lng: this.get('lng')};
 		var marker = new google.maps.Marker({

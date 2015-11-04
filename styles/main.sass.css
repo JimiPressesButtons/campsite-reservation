@@ -47,6 +47,32 @@
   border: 0.25em solid #78695b;
   height: 25em; }
 
+.Calendar {
+  border-collapse: collapse;
+  padding: 0;
+  margin: 4rem auto 0; }
+
+.Calendar th,
+.Calendar td {
+  padding: 1rem;
+  text-align: center; }
+
+.Day:hover {
+  background: #eee;
+  color: #000; }
+
+.Day.today {
+  background: #666;
+  color: #fff; }
+
+.Day.selected {
+  background: #2980b9;
+  color: #fff; }
+
+.Day.other-month {
+  background: #fafafa;
+  color: #aaa; }
+
 #statusBar {
   height: 3em;
   background-color: green;

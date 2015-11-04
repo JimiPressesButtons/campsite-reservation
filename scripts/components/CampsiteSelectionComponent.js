@@ -1,20 +1,22 @@
 var React= require('react');
 var Backbone = require('backbone');
 var _ = require('backbone/node_modules/underscore');
-var Calendar = require('../../node_modules/react-calendar-pane');
+// var DateRangePicker = require('../../node_modules/react-daterange-picker');
 var moment = require('../../node_modules/moment/min/moment.min.js');
 var CampsiteModel = require('../models/CampsiteModel.js');
 var ParkModel = require('../models/ParkModel.js');
 var StatusBarComponent = require('./StatusBarComponent.js');
 var CampsiteDetailsComponent = require('./CampsiteDetailsComponent.js');
 
+var startDate = null;
+var endDate = null;
 
 module.exports = React.createClass({
 	getInitialState: function(){
 		return{
+			value: null,
 			campsites:[],
-			campsiteSelected:null,
-			events: null
+			campsiteSelected:null
 		};
 	},
 	componentWillMount: function(){
@@ -37,10 +39,9 @@ module.exports = React.createClass({
 		);
 	},
 	render: function(){
-		// console.log(this.state.campsiteSelected);
 		var campsites = this.state.campsites.map(
 			(campsite)=>{
-				let boundItemClick = this.onCampsiteSelect.bind(this, campsite.id);
+				let boundItemClick = this.onCampsiteSelect.bind(this, campsite);
 				return(
 					<div onClick={boundItemClick} className="listItem" >{campsite}</div> 
 				);
@@ -54,41 +55,51 @@ module.exports = React.createClass({
 						<ul> {campsites} </ul>
 					</div>
 					<div ref='calendar'id='calendar'className ='seven columns'>
-						<Calendar onSelect={this.onSelect}/>
+						<form id='dates' onSubmit={this.saveDate}>
+							<input type='date' ref='startDateTemp' />
+							<input type='date' ref='endDateTemp' />
+							<button>Save the date</button>
+						</form>
 					</div>
-					{this.state.campsiteSelected ? <CampsiteDetailsComponent router = {this.props.router} campsiteType={this.state.campsiteSelected} onClose={this.onCampsiteClose}/> : null}
+					{this.state.campsiteSelected ? <CampsiteDetailsComponent 
+						router = {this.props.router} 
+						parkId={this.props.parkId}
+						campsiteType={this.state.campsiteSelected} 
+						onClose={this.onCampsiteClose}
+						startDate = {startDate}
+						endDate = {endDate}
+						/> : null}
 				</div>
 			</div>
 		);
 	},
-	onSelect: function (date) {
-        if (moment().isSame(date, 'year')) {
-            this.eventQuery(date);
-        } else {
-            return false;
-        }
-    },
-    eventQuery: function(date){
-        let currentDate = moment(date._d).format('MMMM Do YYYY');
-        let eventQuery = new Parse.Query('Event');
-        eventQuery.equalTo('dateOfEvent', currentDate);
-        eventQuery.find().then(
-            (events) => {
-                this.setState({events: events})
-            },
-            (err) => {
-                console.log(err)
-            }
-        )
-    },
+	// handleSelect:function(range, states) {
+	// 	// range is a moment-range object
+	// 	this.setState({
+	// 		value: range,
+	// 		states: states,
+	// 	});
+	// },
+	saveDate: function(e){
+		e.preventDefault();
+		startDate = this.refs.startDateTemp.value;
+		endDate = this.refs.endDateTemp.value;
+	},	
     onCampsiteSelect:function(u){
-    	console.log(u);
-    	this.setState({campsiteSelected:u});
-
+		this.setState({campsiteSelected:u});
     },
     onCampsiteClose:function(){
 		this.setState({campsiteSelected: null});
 	},
-});
-
-		// {this.state.parkSelected ? <ParkDetailsComponent router = {this.props.router} parkId={this.state.parkSelected} onClose={this.onParkClose}/> : null}
+});		
+//						<DateRangePicker
+							// firstOfWeek={1}
+							// numberOfCalendars={1}
+							// selectionType='range'
+							// minimumDate={new Date()}
+							// stateDefinitions={stateDefinitions}
+							// dateStates={dateRanges}
+							// defaultState="available"
+							// showLegend={true}
+							// value={this.state.value}
+							// onSelect={this.handleSelect} />

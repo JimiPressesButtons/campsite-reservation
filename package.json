@@ -32,6 +32,7 @@
     "moment": "^2.10.6",
     "react": "^0.14.0",
     "react-calendar-pane": "0.0.20",
+    "react-daterange-picker": "^0.12.1",
     "react-dom": "^0.14.0",
     "skeleton-css": "^2.0.4"
   }
