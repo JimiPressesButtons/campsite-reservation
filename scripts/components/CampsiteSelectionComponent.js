@@ -3,10 +3,10 @@ var Backbone = require('backbone');
 var _ = require('backbone/node_modules/underscore');
 // var DateRangePicker = require('../../node_modules/react-daterange-picker');
 var moment = require('../../node_modules/moment/min/moment.min.js');
-var CampsiteModel = require('../models/CampsiteModel.js');
-var ParkModel = require('../models/ParkModel.js');
 var StatusBarComponent = require('./StatusBarComponent.js');
 var CampsiteDetailsComponent = require('./CampsiteDetailsComponent.js');
+var CampsiteModel = require('../models/CampsiteModel.js');
+var ParkModel = require('../models/ParkModel.js');
 
 var startDate = null;
 var endDate = null;

@@ -14,11 +14,8 @@ module.exports= React.createClass({
 	componentWillMount: function(){
 		console.log(this.props.campsiteType, this.props.parkId);
 		console.log(this.props.startDate, this.props.endDate);
-
-
 	},
 	render:function(){
-		console.log(this.state.readyCampsites[0]);
 		return(
 			<div id= 'campsiteDetail'className ='seven columns'> 
 				<img className='closeIcon' onClick={this.closePark} src='../../images/ic_highlight_off_18pt_2x.png' />
@@ -69,8 +66,25 @@ module.exports= React.createClass({
 		campsitesQuery.equalTo('type',this.props.campsiteType);
 		campsitesQuery.notContainedIn('objectId',reservationConflictIds).find().then(
 			(campsiteList)=>{
-				console.log(campsiteList);
 				this.setState({readyCampsites:campsiteList});
+				console.log(campsiteList);
+				console.log(this.state.readyCampsites[0]);
+
+				let randomCampsite = Math.floor(Math.random()*(this.state.readyCampsites.length-0)); //need to make sure this include the first and last entry.
+				console.log(randomCampsite);
+				console.log(this.state.readyCampsites[randomCampsite]);
+
+				var newReservation = new ReservationModel({
+					campsiteId: this.state.readyCampsites[randomCampsite],
+					startDate: new Date(this.props.startDate),
+					endDate: new Date(this.props.endDate)
+				});
+				newReservation.save({
+					success: (u) => {
+						this.props.router.navigate('#confirmSelection/'+newReservation.id, {trigger: true});
+					}			
+				});
+
 			},
 			(err)=>{
 				console.log(err);
@@ -78,15 +92,6 @@ module.exports= React.createClass({
 		);
 
 
-
-		// this.setState({readyCampsites:campsiteList});
-		// var newReservation = new ReservationModel({
-		// 	campsiteId: ,
-		// 	startDate: this.props.startDate,
-		// 	endDate: this.props.endDate
-		// });
-		// newReservation.save();
-		// this.props.router.navigate('#campsite/'+this.state.parkId, {trigger: true});
 	},
 	closePark:function(){
 		console.log('in closePark');

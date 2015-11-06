@@ -6,8 +6,7 @@ var CampsiteModel = require('../models/CampsiteModel.js');
 var ParkDetailsComponent =require('./ParkDetailsComponent.js');
 var StatusBarComponent = require('./StatusBarComponent.js');
 
-var markerList= [];
-
+var markerList = [];
 module.exports = React.createClass({
 	getInitialState: function(){
 		return{
@@ -18,21 +17,23 @@ module.exports = React.createClass({
 	},
 	componentWillMount: function(){
 		var parkQuery = new Parse.Query(ParkModel);
-		parkQuery.find().then(
+		parkQuery.equalTo('region','westTexas').find().then(
 			(park) =>{
 				this.setState({parkList:park});
-				park.forEach(
-					(park)=>{
-						var myLatLng = {lat: park.get('lat'), lng: park.get('lng')};
-						var marker = new google.maps.Marker({
-							position: myLatLng,
-							map: this.map,
-							title: park.get('name')
-						});
-						marker.addListener('click', () => {
-							this.setState({parkSelected: park.id});
-						});
-					})
+				console.log(this.state.parkList);
+				this.createMarker(this.state.parkList);
+				// park.forEach(
+				// 	(park)=>{
+				// 		var myLatLng = {lat: park.get('lat'), lng: park.get('lng')};
+				// 		var marker = new google.maps.Marker({
+				// 			position: myLatLng,
+				// 			map: this.map,
+				// 			title: park.get('name')
+				// 		});
+				// 		marker.addListener('click', () => {
+				// 			this.setState({parkSelected: park.id});
+				// 		});
+				// 	})
 			},
 			(err) =>{
 				console.log(err);
@@ -40,7 +41,7 @@ module.exports = React.createClass({
 		);
 	},
 	componentDidMount: function(){
-		var texas = {lat:31.000, lng: -99.500}
+		var texas = {lat:31.000, lng: -102.500}
 		this.map = new google.maps.Map(this.refs.map, {
 			center: texas,
 			zoom: 6,
@@ -138,17 +139,25 @@ module.exports = React.createClass({
 		e.preventDefault();
 		console.log((this.refs.searchPark.value).toLowerCase());
 	},
-	createMarker: function(){
-//MAKE THIS TO WHERE IT DELETES ALL MARKERS AND THEN MAKES THEM BASED OFF AN ARRAY. YOU DETERMINE WHAT MAKERS NEED TO GO INTO THE ARRAY BASED ON THE STATE. PASS AN ARRAY INTO THE FUNCTION. 
-
-
-		console.log('createMarker');
-		var myLatLng = {lat: this.get('lat'), lng: this.get('lng')};
-		var marker = new google.maps.Marker({
-			position: myLatLng,
-			map: this.map,
-			title: this.get('name')
-		});
+	createMarker: function(parksArray){
+		for(let i=0;i<markerList.length;i++){
+			markerList[i].setMap(null);
+		}
+//>//MAKE THIS TO WHERE IT DELETES ALL MARKERS AND THEN MAKES THEM BASED OFF AN ARRAY. YOU DETERMINE WHAT MAKERS NEED TO GO INTO THE ARRAY BASED ON THE STATE. PASS AN ARRAY INTO THE FUNCTION. 
+		parksArray.forEach(
+			(park)=>{
+				let myLatLng = {lat: park.get('lat'), lng: park.get('lng')};
+				let marker = new google.maps.Marker({
+					position: myLatLng,
+					map: this.map,
+					title: park.get('name')
+				});
+				marker.addListener('click', () => {
+					this.setState({parkSelected: park.id});
+				});
+				markerList.push(marker);
+			});
+		console.log(markerList);
 	},
 	onFilter: function(e){
 		e.preventDefault();
@@ -172,15 +181,7 @@ module.exports = React.createClass({
 					parks.push(campsByPark[propertyName][0].get('parkId'));
 				}
 				this.setState({parkList:parks});
-				// parks.forEach(
-				// 	(park)=>{
-				// 		let myLatLng = {lat: campsByPark[propertyName][0].get('lat'), lng: campsByPark[propertyName][0].get('lng')};
-				// 		let marker = new google.maps.Marker({
-				// 			position: myLatLng,
-				// 			map: this.map,
-				// 			title: campsByPark[propertyName][0].get('name')
-				// 		});
-				// })
+				this.createMarker(this.state.parkList);
 			}
 		);
 

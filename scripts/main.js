@@ -11,13 +11,17 @@ var NavComponent = require('./components/NavComponent.js');
 var ReserveHomeComponent = require('./components/ReserveHomeComponent.js');
 var ParkSelectionComponent = require('./components/ParkSelectionComponent.js');
 var CampsiteSelectionComponent = require('./components/CampsiteSelectionComponent.js');
+var ConfirmSelectionComponent = require('./components/ConfirmSelectionComponent.js');
+var CheckoutComponent = require('./components/CheckoutComponent.js');
 var main = document.getElementById('main');
-
+var nav = document.getElementById('nav');
 var Router = Backbone.Router.extend({
 	routes:{
 		'':'home',
 		'park':'park',
-		'campsite/:id':'campsite'
+		'campsite/:id':'campsite',
+		'confirmSelection/:id':'confirmSelection',
+		'checkout/:id':'checkout'
 	},
 	home: function(){
 		ReactDOM.render(<ReserveHomeComponent />, main);
@@ -26,13 +30,17 @@ var Router = Backbone.Router.extend({
 		ReactDOM.render(<ParkSelectionComponent router={r}/>,main);
 	},
 	campsite: function(id){
-		ReactDOM.render(<CampsiteSelectionComponent parkId={id}/>,main);
+		ReactDOM.render(<CampsiteSelectionComponent parkId={id} router={r}/>,main);
+	},
+	confirmSelection: function(id){
+		ReactDOM.render(<ConfirmSelectionComponent reservationId={id} router={r}/>,main);
+	},
+	checkout: function(id){
+		ReactDOM.render(<CheckoutComponent reservationId={id} router={r}/>,main);
 	}
 });
 
 var r = new Router();
 Backbone.history.start();
 
-ReactDOM.render(
-	<NavComponent />, document.getElementById('nav')
-);
+ReactDOM.render(<NavComponent />, nav);

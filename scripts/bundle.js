@@ -31733,7 +31733,6 @@ module.exports = React.createClass({
 		console.log(this.props.startDate, this.props.endDate);
 	},
 	render: function render() {
-		console.log(this.state.readyCampsites[0]);
 		return React.createElement(
 			'div',
 			{ id: 'campsiteDetail', className: 'seven columns' },
@@ -31791,20 +31790,27 @@ module.exports = React.createClass({
 		campsitesQuery.equalTo('parkId', targetParkModel);
 		campsitesQuery.equalTo('type', this.props.campsiteType);
 		campsitesQuery.notContainedIn('objectId', reservationConflictIds).find().then(function (campsiteList) {
-			console.log(campsiteList);
 			_this2.setState({ readyCampsites: campsiteList });
+			console.log(campsiteList);
+			console.log(_this2.state.readyCampsites[0]);
+
+			var randomCampsite = Math.floor(Math.random() * (_this2.state.readyCampsites.length - 0)); //need to make sure this include the first and last entry.
+			console.log(randomCampsite);
+			console.log(_this2.state.readyCampsites[randomCampsite]);
+
+			var newReservation = new ReservationModel({
+				campsiteId: _this2.state.readyCampsites[randomCampsite],
+				startDate: new Date(_this2.props.startDate),
+				endDate: new Date(_this2.props.endDate)
+			});
+			newReservation.save({
+				success: function success(u) {
+					_this2.props.router.navigate('#confirmSelection/' + newReservation.id, { trigger: true });
+				}
+			});
 		}, function (err) {
 			console.log(err);
 		});
-
-		// this.setState({readyCampsites:campsiteList});
-		// var newReservation = new ReservationModel({
-		// 	campsiteId: ,
-		// 	startDate: this.props.startDate,
-		// 	endDate: this.props.endDate
-		// });
-		// newReservation.save();
-		// this.props.router.navigate('#campsite/'+this.state.parkId, {trigger: true});
 	},
 	closePark: function closePark() {
 		console.log('in closePark');
@@ -31812,7 +31818,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"../models/CampsiteModel.js":170,"../models/ParkModel.js":171,"../models/ReservationModel.js":172,"backbone":1,"backbone/node_modules/underscore":2,"react":161}],163:[function(require,module,exports){
+},{"../models/CampsiteModel.js":172,"../models/ParkModel.js":173,"../models/ReservationModel.js":174,"backbone":1,"backbone/node_modules/underscore":2,"react":161}],163:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -31820,10 +31826,10 @@ var Backbone = require('backbone');
 var _ = require('backbone/node_modules/underscore');
 // var DateRangePicker = require('../../node_modules/react-daterange-picker');
 var moment = require('../../node_modules/moment/min/moment.min.js');
-var CampsiteModel = require('../models/CampsiteModel.js');
-var ParkModel = require('../models/ParkModel.js');
 var StatusBarComponent = require('./StatusBarComponent.js');
 var CampsiteDetailsComponent = require('./CampsiteDetailsComponent.js');
+var CampsiteModel = require('../models/CampsiteModel.js');
+var ParkModel = require('../models/ParkModel.js');
 
 var startDate = null;
 var endDate = null;
@@ -31942,7 +31948,167 @@ module.exports = React.createClass({
 // value={this.state.value}
 // onSelect={this.handleSelect} />
 
-},{"../../node_modules/moment/min/moment.min.js":5,"../models/CampsiteModel.js":170,"../models/ParkModel.js":171,"./CampsiteDetailsComponent.js":162,"./StatusBarComponent.js":168,"backbone":1,"backbone/node_modules/underscore":2,"react":161}],164:[function(require,module,exports){
+},{"../../node_modules/moment/min/moment.min.js":5,"../models/CampsiteModel.js":172,"../models/ParkModel.js":173,"./CampsiteDetailsComponent.js":162,"./StatusBarComponent.js":170,"backbone":1,"backbone/node_modules/underscore":2,"react":161}],164:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
+var Backbone = require('backbone');
+var StatusBarComponent = require('./StatusBarComponent.js');
+
+module.exports = React.createClass({
+	displayName: 'exports',
+
+	render: function render() {
+		console.log(this.props.reservationId);
+		return React.createElement(
+			'div',
+			{ className: 'container' },
+			React.createElement(
+				'div',
+				{ className: 'row' },
+				React.createElement(StatusBarComponent, { status: 'checkout' }),
+				React.createElement(
+					'div',
+					{ id: 'selectList', className: 'four columns' },
+					React.createElement('ul', null)
+				),
+				React.createElement(
+					'div',
+					{ ref: 'calendar', id: 'calendar', className: 'seven columns' },
+					React.createElement('input', { type: 'text', ref: 'ccNum', placeholder: 'FAKE Credit Card Number' }),
+					React.createElement('input', { type: 'text', ref: 'ccSec', placeholder: 'Three digit security number' }),
+					React.createElement('input', { type: 'text', ref: 'ccExp', placeholder: 'Expiration Date' })
+				)
+			)
+		);
+	}
+
+});
+
+// NZCzkWMr0J
+
+},{"./StatusBarComponent.js":170,"backbone":1,"react":161}],165:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
+var Backbone = require('backbone');
+var StatusBarComponent = require('./StatusBarComponent.js');
+var CampsiteModel = require('../models/CampsiteModel.js');
+var ReservationModel = require('../models/ReservationModel.js');
+var ParkModel = require('../models/ParkModel.js');
+
+module.exports = React.createClass({
+	displayName: 'exports',
+
+	getInitialState: function getInitialState() {
+		return {
+			reservationList: [],
+			campsiteType: null,
+			startDate: null,
+			endDate: null,
+			park: null
+		};
+	},
+	componentWillMount: function componentWillMount() {
+		var _this = this;
+
+		console.log(this.props.reservationId);
+		// this.setState ({reservationList: this.props.reservationId});
+		var reservationQuery = new Parse.Query(ReservationModel);
+		reservationQuery.include(['campsiteId']);
+		reservationQuery.include(['campsiteId.parkId']);
+		reservationQuery.get(this.props.reservationId).then(function (reservations) {
+			console.log(reservations);
+			console.log(reservations.get('campsiteId').id);
+			console.log(reservations.get('campsiteId').get('type'));
+			console.log(reservations.get('campsiteId').get('parkId').get('name'));
+			console.log(reservations.get('startDate'));
+			console.log(reservations.get('endDate'));
+			_this.setState({ park: reservations.get('campsiteId').get('parkId').get('name') });
+			_this.setState({ campsiteType: reservations.get('campsiteId').get('type') });
+			_this.setState({ startDate: reservations.get('startDate').toString().substring(0, 15) });
+			_this.setState({ endDate: reservations.get('endDate').toString().substring(0, 15) });
+		});
+	},
+	componentDidMount: function componentDidMount() {
+		// var campsiteQuery = new Parse.Query(CampsiteModel);
+		// var targetModel = new CampsiteModel({objectId:this.state.campsite});
+	},
+	render: function render() {
+		var _this2 = this;
+
+		var reservationList = this.state.reservationList.map(function (reservation) {
+			var boundItemClick = _this2.onCampsiteSelect.bind(_this2, campsite);
+			return React.createElement(
+				'div',
+				{ onClick: boundItemClick, className: 'listItem' },
+				reservation
+			);
+		});
+
+		return React.createElement(
+			'div',
+			{ className: 'container' },
+			React.createElement(
+				'div',
+				{ className: 'row' },
+				React.createElement(StatusBarComponent, { status: 'confirmSelection' }),
+				React.createElement(
+					'div',
+					{ id: 'selectList', className: 'four columns' },
+					React.createElement(
+						'ul',
+						null,
+						this.state.reservationList
+					)
+				),
+				React.createElement(
+					'div',
+					{ ref: 'calendar', id: 'calendar', className: 'seven columns' },
+					React.createElement(
+						'h3',
+						null,
+						this.state.park
+					),
+					React.createElement(
+						'h4',
+						null,
+						this.state.campsiteType
+					),
+					React.createElement(
+						'h5',
+						null,
+						this.state.startDate
+					),
+					React.createElement(
+						'h5',
+						null,
+						this.state.endDate
+					),
+					React.createElement(
+						'button',
+						{ onClick: this.onCancel },
+						'Cancel'
+					),
+					React.createElement(
+						'button',
+						{ onClick: this.onConfirm },
+						'Confirm'
+					)
+				)
+			)
+		);
+	},
+	onCancel: function onCancel() {
+		console.log('in cancel');
+	},
+	onConfirm: function onConfirm() {
+		console.log('in confirm');
+		this.props.router.navigate('#checkout/' + this.props.reservationId, { trigger: true });
+	}
+});
+
+},{"../models/CampsiteModel.js":172,"../models/ParkModel.js":173,"../models/ReservationModel.js":174,"./StatusBarComponent.js":170,"backbone":1,"react":161}],166:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -31982,7 +32148,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"backbone":1,"react":161}],165:[function(require,module,exports){
+},{"backbone":1,"react":161}],167:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -32036,7 +32202,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"../models/ParkModel.js":171,"backbone":1,"react":161}],166:[function(require,module,exports){
+},{"../models/ParkModel.js":173,"backbone":1,"react":161}],168:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -32048,7 +32214,6 @@ var ParkDetailsComponent = require('./ParkDetailsComponent.js');
 var StatusBarComponent = require('./StatusBarComponent.js');
 
 var markerList = [];
-
 module.exports = React.createClass({
 	displayName: 'exports',
 
@@ -32063,25 +32228,28 @@ module.exports = React.createClass({
 		var _this = this;
 
 		var parkQuery = new Parse.Query(ParkModel);
-		parkQuery.find().then(function (park) {
+		parkQuery.equalTo('region', 'westTexas').find().then(function (park) {
 			_this.setState({ parkList: park });
-			park.forEach(function (park) {
-				var myLatLng = { lat: park.get('lat'), lng: park.get('lng') };
-				var marker = new google.maps.Marker({
-					position: myLatLng,
-					map: _this.map,
-					title: park.get('name')
-				});
-				marker.addListener('click', function () {
-					_this.setState({ parkSelected: park.id });
-				});
-			});
+			console.log(_this.state.parkList);
+			_this.createMarker(_this.state.parkList);
+			// park.forEach(
+			// 	(park)=>{
+			// 		var myLatLng = {lat: park.get('lat'), lng: park.get('lng')};
+			// 		var marker = new google.maps.Marker({
+			// 			position: myLatLng,
+			// 			map: this.map,
+			// 			title: park.get('name')
+			// 		});
+			// 		marker.addListener('click', () => {
+			// 			this.setState({parkSelected: park.id});
+			// 		});
+			// 	})
 		}, function (err) {
 			console.log(err);
 		});
 	},
 	componentDidMount: function componentDidMount() {
-		var texas = { lat: 31.000, lng: -99.500 };
+		var texas = { lat: 31.000, lng: -102.500 };
 		this.map = new google.maps.Map(this.refs.map, {
 			center: texas,
 			zoom: 6,
@@ -32354,19 +32522,29 @@ module.exports = React.createClass({
 		e.preventDefault();
 		console.log(this.refs.searchPark.value.toLowerCase());
 	},
-	createMarker: function createMarker() {
-		//MAKE THIS TO WHERE IT DELETES ALL MARKERS AND THEN MAKES THEM BASED OFF AN ARRAY. YOU DETERMINE WHAT MAKERS NEED TO GO INTO THE ARRAY BASED ON THE STATE. PASS AN ARRAY INTO THE FUNCTION.
+	createMarker: function createMarker(parksArray) {
+		var _this3 = this;
 
-		console.log('createMarker');
-		var myLatLng = { lat: this.get('lat'), lng: this.get('lng') };
-		var marker = new google.maps.Marker({
-			position: myLatLng,
-			map: this.map,
-			title: this.get('name')
+		for (var i = 0; i < markerList.length; i++) {
+			markerList[i].setMap(null);
+		}
+		//>//MAKE THIS TO WHERE IT DELETES ALL MARKERS AND THEN MAKES THEM BASED OFF AN ARRAY. YOU DETERMINE WHAT MAKERS NEED TO GO INTO THE ARRAY BASED ON THE STATE. PASS AN ARRAY INTO THE FUNCTION.
+		parksArray.forEach(function (park) {
+			var myLatLng = { lat: park.get('lat'), lng: park.get('lng') };
+			var marker = new google.maps.Marker({
+				position: myLatLng,
+				map: _this3.map,
+				title: park.get('name')
+			});
+			marker.addListener('click', function () {
+				_this3.setState({ parkSelected: park.id });
+			});
+			markerList.push(marker);
 		});
+		console.log(markerList);
 	},
 	onFilter: function onFilter(e) {
-		var _this3 = this;
+		var _this4 = this;
 
 		e.preventDefault();
 		var parkQuery = new Parse.Query(ParkModel);
@@ -32387,21 +32565,13 @@ module.exports = React.createClass({
 			for (var propertyName in campsByPark) {
 				parks.push(campsByPark[propertyName][0].get('parkId'));
 			}
-			_this3.setState({ parkList: parks });
-			// parks.forEach(
-			// 	(park)=>{
-			// 		let myLatLng = {lat: campsByPark[propertyName][0].get('lat'), lng: campsByPark[propertyName][0].get('lng')};
-			// 		let marker = new google.maps.Marker({
-			// 			position: myLatLng,
-			// 			map: this.map,
-			// 			title: campsByPark[propertyName][0].get('name')
-			// 		});
-			// })
+			_this4.setState({ parkList: parks });
+			_this4.createMarker(_this4.state.parkList);
 		});
 	}
 });
 
-},{"../models/CampsiteModel.js":170,"../models/ParkModel.js":171,"./ParkDetailsComponent.js":165,"./StatusBarComponent.js":168,"backbone":1,"backbone/node_modules/underscore":2,"react":161}],167:[function(require,module,exports){
+},{"../models/CampsiteModel.js":172,"../models/ParkModel.js":173,"./ParkDetailsComponent.js":167,"./StatusBarComponent.js":170,"backbone":1,"backbone/node_modules/underscore":2,"react":161}],169:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -32416,7 +32586,7 @@ module.exports = React.createClass({
 
 });
 
-},{"backbone":1,"react":161}],168:[function(require,module,exports){
+},{"backbone":1,"react":161}],170:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -32431,7 +32601,7 @@ module.exports = React.createClass({
 		};
 	},
 	componentWillMount: function componentWillMount() {
-		if (this.props.status === 'parkSelect') {} else if (this.props.status === 'campSelect') {}
+		if (this.props.status === 'parkSelect') {} else if (this.props.status === 'campSelect') {} else if (this.props.status === 'confirmSelection') {} else if (this.props.status === 'checkout') {}
 	},
 	componentDidMount: function componentDidMount() {},
 	render: function render() {
@@ -32463,7 +32633,7 @@ module.exports = React.createClass({
 
 });
 
-},{"backbone":1,"react":161}],169:[function(require,module,exports){
+},{"backbone":1,"react":161}],171:[function(require,module,exports){
 'use strict';
 var React = require('react');
 var ReactDOM = require('react-dom');
@@ -32477,13 +32647,17 @@ var NavComponent = require('./components/NavComponent.js');
 var ReserveHomeComponent = require('./components/ReserveHomeComponent.js');
 var ParkSelectionComponent = require('./components/ParkSelectionComponent.js');
 var CampsiteSelectionComponent = require('./components/CampsiteSelectionComponent.js');
+var ConfirmSelectionComponent = require('./components/ConfirmSelectionComponent.js');
+var CheckoutComponent = require('./components/CheckoutComponent.js');
 var main = document.getElementById('main');
-
+var nav = document.getElementById('nav');
 var Router = Backbone.Router.extend({
 	routes: {
 		'': 'home',
 		'park': 'park',
-		'campsite/:id': 'campsite'
+		'campsite/:id': 'campsite',
+		'confirmSelection/:id': 'confirmSelection',
+		'checkout/:id': 'checkout'
 	},
 	home: function home() {
 		ReactDOM.render(React.createElement(ReserveHomeComponent, null), main);
@@ -32492,37 +32666,43 @@ var Router = Backbone.Router.extend({
 		ReactDOM.render(React.createElement(ParkSelectionComponent, { router: r }), main);
 	},
 	campsite: function campsite(id) {
-		ReactDOM.render(React.createElement(CampsiteSelectionComponent, { parkId: id }), main);
+		ReactDOM.render(React.createElement(CampsiteSelectionComponent, { parkId: id, router: r }), main);
+	},
+	confirmSelection: function confirmSelection(id) {
+		ReactDOM.render(React.createElement(ConfirmSelectionComponent, { reservationId: id, router: r }), main);
+	},
+	checkout: function checkout(id) {
+		ReactDOM.render(React.createElement(CheckoutComponent, { reservationId: id, router: r }), main);
 	}
 });
 
 var r = new Router();
 Backbone.history.start();
 
-ReactDOM.render(React.createElement(NavComponent, null), document.getElementById('nav'));
+ReactDOM.render(React.createElement(NavComponent, null), nav);
 
-},{"./components/CampsiteSelectionComponent.js":163,"./components/NavComponent.js":164,"./components/ParkSelectionComponent.js":166,"./components/ReserveHomeComponent.js":167,"backbone":1,"jquery":4,"react":161,"react-dom":6}],170:[function(require,module,exports){
+},{"./components/CampsiteSelectionComponent.js":163,"./components/CheckoutComponent.js":164,"./components/ConfirmSelectionComponent.js":165,"./components/NavComponent.js":166,"./components/ParkSelectionComponent.js":168,"./components/ReserveHomeComponent.js":169,"backbone":1,"jquery":4,"react":161,"react-dom":6}],172:[function(require,module,exports){
 'use strict';
 
 module.exports = Parse.Object.extend({
   className: 'Campsites'
 });
 
-},{}],171:[function(require,module,exports){
+},{}],173:[function(require,module,exports){
 'use strict';
 
 module.exports = Parse.Object.extend({
   className: 'Parks'
 });
 
-},{}],172:[function(require,module,exports){
+},{}],174:[function(require,module,exports){
 'use strict';
 
 module.exports = Parse.Object.extend({
   className: 'Reservations'
 });
 
-},{}]},{},[169])
+},{}]},{},[171])
 
 
 //# sourceMappingURL=bundle.js.map

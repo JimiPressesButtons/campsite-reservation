@@ -12,6 +12,10 @@ module.exports = React.createClass({
 
 		}else if(this.props.status==='campSelect'){
 
+		}else if(this.props.status==='confirmSelection'){
+			
+		}else if(this.props.status==='checkout'){
+			
 		}
 	},
 	componentDidMount:function() {
