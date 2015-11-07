@@ -7,12 +7,14 @@ var ParkDetailsComponent =require('./ParkDetailsComponent.js');
 var StatusBarComponent = require('./StatusBarComponent.js');
 
 var markerList = [];
+var clickedMarkerList = [];
 module.exports = React.createClass({
 	getInitialState: function(){
 		return{
 			map: null,
 			parkList: [],
 			parkSelected: null
+
 		};
 	},
 	componentWillMount: function(){
@@ -20,20 +22,7 @@ module.exports = React.createClass({
 		parkQuery.equalTo('region','westTexas').find().then(
 			(park) =>{
 				this.setState({parkList:park});
-				console.log(this.state.parkList);
 				this.createMarker(this.state.parkList);
-				// park.forEach(
-				// 	(park)=>{
-				// 		var myLatLng = {lat: park.get('lat'), lng: park.get('lng')};
-				// 		var marker = new google.maps.Marker({
-				// 			position: myLatLng,
-				// 			map: this.map,
-				// 			title: park.get('name')
-				// 		});
-				// 		marker.addListener('click', () => {
-				// 			this.setState({parkSelected: park.id});
-				// 		});
-				// 	})
 			},
 			(err) =>{
 				console.log(err);
@@ -52,30 +41,27 @@ module.exports = React.createClass({
 	render: function(){
 		var parks = this.state.parkList.map(
 			(park)=>{
-				let boundItemClick = this.onParkSelect.bind(this, park.id);
+				let boundItemClick = this.onParkSelect.bind(this, park);
 				return(
 					<div onClick={boundItemClick} className="listItem" key={park.id}>{park.get('name')}</div> 
 				);
 			}
 		);
-		var markerQuery = new Parse.Query(ParkModel);
-		markerQuery.equalTo()
-
 		return(
 			<div className='container'>
 				<div className='row'>
 					<StatusBarComponent status='parkSelect'/>
-					<div id='selectList' className ='three columns'>
+					<div id='selectList' className ='col m4'>
 						<form onSubmit={this.onSearchPark}>
 							<input ref='searchPark' placeholder='By Park Name' type='text' />
 						</form>
 						<ul> {parks} </ul>
 					</div>
-					<div ref='map'id='map'className ='eight columns'></div>
+					<div ref='map'id='map'className ='col m8'></div>
 
-					{this.state.parkSelected ? <ParkDetailsComponent router = {this.props.router} parkId={this.state.parkSelected} onClose={this.onParkClose}/> : null}
+					{this.state.parkSelected ? <ParkDetailsComponent router = {this.props.router} park={this.state.parkSelected} onClose={this.onParkClose}/> : null}
 
-					<div ref='filter' id='filter' className = 'seven columns'>
+					<div ref='filter' id='filter' className = 'col s6'>
 						<h3>Filter</h3>
 						<form onSubmit={this.onFilter}>
 							<select ref='activity' id='activityList' className='three columns'>
@@ -128,9 +114,29 @@ module.exports = React.createClass({
 		);
 	},
 	onParkSelect: function(u){
-		this.setState({parkSelected:null});
-		console.log(this.state.parkSelected);
 		this.setState({parkSelected: u});
+		for(let i=0;i<clickedMarkerList.length;i++){
+			clickedMarkerList[i].setMap(null);
+		} 		
+	this.createMarker(this.state.parkList);
+	for(let i=0;i<markerList.length;i++){
+		if(_.isEqual(markerList[i].title,u.get('name'))){
+			markerList[i].setMap(null);
+		}
+	}
+		var image = '../../images/marker-green.png'
+		let myLatLng = {lat: u.get('lat'), lng: u.get('lng')};
+				let marker = new google.maps.Marker({
+					position: myLatLng,
+					icon: image,
+					map: this.map,
+					animation: google.maps.Animation.DROP,
+					title: u.get('name')
+				});
+				marker.addListener('click', () => {
+					this.setState({parkSelected: u});
+				});
+				clickedMarkerList.push(marker);
 	},
 	onParkClose:function(){
 		this.setState({parkSelected: null});
@@ -142,22 +148,25 @@ module.exports = React.createClass({
 	createMarker: function(parksArray){
 		for(let i=0;i<markerList.length;i++){
 			markerList[i].setMap(null);
-		}
-//>//MAKE THIS TO WHERE IT DELETES ALL MARKERS AND THEN MAKES THEM BASED OFF AN ARRAY. YOU DETERMINE WHAT MAKERS NEED TO GO INTO THE ARRAY BASED ON THE STATE. PASS AN ARRAY INTO THE FUNCTION. 
+		} 
+		for(let i=0;i<clickedMarkerList.length;i++){
+			clickedMarkerList[i].setMap(null);
+		} 
 		parksArray.forEach(
 			(park)=>{
 				let myLatLng = {lat: park.get('lat'), lng: park.get('lng')};
 				let marker = new google.maps.Marker({
 					position: myLatLng,
 					map: this.map,
+					// animation: google.maps.Animation.DROP,
 					title: park.get('name')
 				});
 				marker.addListener('click', () => {
-					this.setState({parkSelected: park.id});
+					this.setState({parkSelected: park});
+					this.onParkSelect(park);
 				});
 				markerList.push(marker);
 			});
-		console.log(markerList);
 	},
 	onFilter: function(e){
 		e.preventDefault();

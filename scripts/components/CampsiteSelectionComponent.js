@@ -1,8 +1,8 @@
 var React= require('react');
 var Backbone = require('backbone');
 var _ = require('backbone/node_modules/underscore');
-// var DateRangePicker = require('../../node_modules/react-daterange-picker');
 var moment = require('../../node_modules/moment/min/moment.min.js');
+var momentRange=require('../../node_modules/moment-range/dist/moment-range.min.js');
 var StatusBarComponent = require('./StatusBarComponent.js');
 var CampsiteDetailsComponent = require('./CampsiteDetailsComponent.js');
 var CampsiteModel = require('../models/CampsiteModel.js');
@@ -14,9 +14,10 @@ var endDate = null;
 module.exports = React.createClass({
 	getInitialState: function(){
 		return{
-			value: null,
 			campsites:[],
-			campsiteSelected:null
+			campsiteSelected:null,
+			startDate: null,
+			endDate: null
 		};
 	},
 	componentWillMount: function(){
@@ -51,13 +52,13 @@ module.exports = React.createClass({
 			<div className='container'>
 				<div className='row'>
 					<StatusBarComponent status='campSelect'/>
-					<div id='selectList' className ='four columns'>
+					<div id='selectList' className ='col m4'>
 						<ul> {campsites} </ul>
 					</div>
-					<div ref='calendar'id='calendar'className ='seven columns'>
+					<div ref='calendar'id='calendar'className ='col m7'>
 						<form id='dates' onSubmit={this.saveDate}>
-							<input type='date' ref='startDateTemp' />
-							<input type='date' ref='endDateTemp' />
+							<input type='date' ref='startDate' />
+							<input type='date' ref='endDate' />
 							<button>Save the date</button>
 						</form>
 					</div>
@@ -66,25 +67,20 @@ module.exports = React.createClass({
 						parkId={this.props.parkId}
 						campsiteType={this.state.campsiteSelected} 
 						onClose={this.onCampsiteClose}
-						startDate = {startDate}
-						endDate = {endDate}
+						startDate = {this.state.startDate}
+						endDate = {this.state.endDate}
 						/> : null}
 				</div>
 			</div>
 		);
 	},
-	// handleSelect:function(range, states) {
-	// 	// range is a moment-range object
-	// 	this.setState({
-	// 		value: range,
-	// 		states: states,
-	// 	});
-	// },
 	saveDate: function(e){
 		e.preventDefault();
-		startDate = this.refs.startDateTemp.value;
-		endDate = this.refs.endDateTemp.value;
-	},	
+		this.setState({startDate: this.refs.startDate.value});
+		this.setState({endDate: this.refs.endDate.value});
+		console.log(this.state.startDate);
+		console.log(this.state.endDate);
+	},
     onCampsiteSelect:function(u){
 		this.setState({campsiteSelected:u});
     },
@@ -92,14 +88,3 @@ module.exports = React.createClass({
 		this.setState({campsiteSelected: null});
 	},
 });		
-//						<DateRangePicker
-							// firstOfWeek={1}
-							// numberOfCalendars={1}
-							// selectionType='range'
-							// minimumDate={new Date()}
-							// stateDefinitions={stateDefinitions}
-							// dateStates={dateRanges}
-							// defaultState="available"
-							// showLegend={true}
-							// value={this.state.value}
-							// onSelect={this.handleSelect} />

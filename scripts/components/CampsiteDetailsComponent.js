@@ -17,7 +17,7 @@ module.exports= React.createClass({
 	},
 	render:function(){
 		return(
-			<div id= 'campsiteDetail'className ='seven columns'> 
+			<div id= 'campsiteDetail'className ='col m7'> 
 				<img className='closeIcon' onClick={this.closePark} src='../../images/ic_highlight_off_18pt_2x.png' />
 				<h3>{this.props.campsiteType}</h3>
 				<button onClick={this.selectCampsite}>Select</button>
@@ -26,6 +26,8 @@ module.exports= React.createClass({
 		);
 	},
 	selectCampsite: function(){
+		console.log(this.props.startDate);
+		console.log(this.props.endDate);
 		// let campsitesQuery = new Parse.Query(CampsiteModel);
 		// let targetParkModel = new ParkModel({objectId: this.props.parkId});
 		// campsitesQuery.equalTo('parkId',targetParkModel);
@@ -60,6 +62,7 @@ module.exports= React.createClass({
 		);
 	},
 	onGetConflicts:function(reservationConflictIds){
+		console.log(this.props.startDate, this.props.endDate)
 		let campsitesQuery = new Parse.Query(CampsiteModel);
 		let targetParkModel = new ParkModel({objectId: this.props.parkId});
 		campsitesQuery.equalTo('parkId',targetParkModel);

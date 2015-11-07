@@ -1,21 +1,22 @@
-.nav-bar {
+@import url(materialize-css/dist/css/materialize.min.css);
+.nav-wrapper {
   height: 65px;
   padding: 5px 1em;
   background-color: #333333;
   color: white; }
-  .nav-bar .image-div {
+  .nav-wrapper .image-div {
     height: 60px;
     float: left; }
-    .nav-bar .image-div a span {
+    .nav-wrapper .image-div a span {
       color: white;
       text-decoration: none !important;
       font-size: 2em; }
-    .nav-bar .image-div img {
+    .nav-wrapper .image-div img {
       height: 100%; }
-  .nav-bar .user-dropdown {
+  .nav-wrapper .user-dropdown {
     float: right;
     margin-top: 0.5em; }
-    .nav-bar .user-dropdown img {
+    .nav-wrapper .user-dropdown img {
       border-radius: 50%; }
 
 #selectList {
@@ -90,6 +91,16 @@
   border: 0.25em solid #78695b;
   border-top: none; }
   #campsiteDetail .closeIcon {
+    float: right;
+    font-size: 1em; }
+
+#homepage {
+  margin-left: 8%;
+  padding: 1em;
+  background-color: #ECE9E6;
+  border: 0.25em solid #78695b;
+  border-top: none; }
+  #homepage .closeIcon {
     float: right;
     font-size: 1em; }
 

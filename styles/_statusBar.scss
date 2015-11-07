@@ -5,9 +5,19 @@
 	background-color: green;
 	border: $border;
 	margin-bottom: 5em;
+	
 	.statusTag{
 		float:left;
 		width: 25%;
 		color: white;
 	}
 }
+
+ // position: relative; 
+ //   height: 250px; 
+ //   width: 0px; 
+ //   -webkit-transform: rotate(90deg); 
+ //   transform: rotate(90deg); 
+ //   border-left: 100px solid #428BCA ; 
+ //   border-right: 100px solid #428BCA ; 
+ //   border-bottom: 40px solid transparent; 

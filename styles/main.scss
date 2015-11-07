@@ -1,9 +1,12 @@
-@import 'navigation',
+@import 'materialize-css/dist/css/materialize.min.css',
+		'navigation',
 		'parkSelection',
 		'campsiteSelection',
 		'statusBar',
 		'campsiteDetail',
+		'home',
 		'parkDetail';
+		
 
 body {
 	background-color: white;

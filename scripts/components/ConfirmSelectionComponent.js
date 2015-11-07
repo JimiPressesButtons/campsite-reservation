@@ -55,10 +55,10 @@ module.exports = React.createClass({
 			<div className='container'>
 				<div className='row'>
 					<StatusBarComponent status='confirmSelection'/>
-					<div id='selectList' className ='four columns'>
+					<div id='selectList' className ='col m4'>
 						<ul>{this.state.reservationList}</ul>
 					</div>
-					<div ref='calendar'id='calendar'className ='seven columns'>
+					<div ref='calendar'id='calendar'className ='col m7'>
 						<h3>{this.state.park}</h3>
 						<h4>{this.state.campsiteType}</h4>
 						<h5>{this.state.startDate}</h5>

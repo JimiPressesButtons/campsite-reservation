@@ -33,3 +33,4 @@ module.exports = React.createClass({
 	}
 
 });
+<div class="css-shapes-preview"></div>
