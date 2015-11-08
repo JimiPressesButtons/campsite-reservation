@@ -23,12 +23,12 @@ module.exports = React.createClass({
 	},
 	render:function(){
 		return(
-			<div id='statusBar'className='eleven columns'>
-				<div className='statusTag'>Select Park</div>
-				<div className='statusTag'>Choose Campsite</div>
-				<div className='statusTag'>Confirmation</div>
-				<div className='statusTag'>Checkout</div>
-			</div>
+			<ul id='statusBar'className='eleven columns breadcumb'>
+				<li className='statusTag'>Select Park</li>
+				<li className='statusTag'>Choose Campsite</li>
+				<li className='statusTag'>Confirmation</li>
+				<li className='statusTag'>Checkout</li>
+			</ul>
 		);
 	}
 

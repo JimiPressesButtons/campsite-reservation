@@ -1,7 +1,6 @@
 @import 'variables';
 
 #campsiteDetail{
-	margin-left:8%;
 	padding: 1em;
 	background-color:$boxNormal;
 	border: $border;
@@ -9,5 +8,12 @@
 	.closeIcon{
 		float: right;
 		font-size: 1em;
+	}
+
+	#campsiteSelectButton{
+		background-color:#6C3109;
+		margin-top: 1em;
+		margin-bottom: 1em;
+		float:right;
 	}
 }

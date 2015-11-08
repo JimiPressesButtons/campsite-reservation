@@ -44,7 +44,7 @@ module.exports = React.createClass({
 			(campsite)=>{
 				let boundItemClick = this.onCampsiteSelect.bind(this, campsite);
 				return(
-					<div onClick={boundItemClick} className="listItem" >{campsite}</div> 
+					<li onClick={boundItemClick} className="collection-item listCampType" >{campsite} </li> 
 				);
 			}
 		);
@@ -52,14 +52,19 @@ module.exports = React.createClass({
 			<div className='container'>
 				<div className='row'>
 					<StatusBarComponent status='campSelect'/>
-					<div id='selectList' className ='col m4'>
-						<ul> {campsites} </ul>
+					<div id='selectList' className ='col m3'>
+						<ul className='collection with-header'> 
+							<li className='collection-header listCampType'><h5>Campsite Type</h5></li>
+							{campsites} 
+						</ul>
 					</div>
-					<div ref='calendar'id='calendar'className ='col m7'>
+					<div ref='calendar'id='calendar'className ='col m7 offset-m1'>
 						<form id='dates' onSubmit={this.saveDate}>
-							<input type='date' ref='startDate' />
-							<input type='date' ref='endDate' />
-							<button>Save the date</button>
+							<label>Arrival Date</label>
+							<input type='date' className='datepicker' ref='startDate' />
+							<label>Departure Date</label>
+							<input type='date' className='datepicker' ref='endDate' />
+							<button id='calendarButton'className="btn  waves-effect">Save the date</button>
 						</form>
 					</div>
 					{this.state.campsiteSelected ? <CampsiteDetailsComponent 

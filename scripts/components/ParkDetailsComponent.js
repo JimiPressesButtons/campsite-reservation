@@ -22,10 +22,10 @@ module.exports = React.createClass({
 	// },
 	render: function(){
 		return(
-			<div id= 'parkDetail'className ='col m7'> 
+			<div id= 'parkDetail'className ='col m8 offset-m1'> 
 				<img className='closeIcon' onClick={this.closePark} src='../../images/ic_highlight_off_18pt_2x.png' />
 				<h3>{this.props.park.get('name')}</h3>
-				<button onClick={this.selectPark}>Select</button>
+				<button className="btn  waves-effect" onClick={this.selectPark}>Select</button>
 
 			</div>
 		);

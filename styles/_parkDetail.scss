@@ -1,13 +1,17 @@
 @import 'variables';
 
 #parkDetail{
-	margin-left:8%;
+
 	padding: 1em;
-	background-color:$boxNormal;
+	background-color:#FFF;
 	border: $border;
 	border-top:none;
 	.closeIcon{
 		float: right;
 		font-size: 1em;
+	}
+	.btn{
+		float:right;
+		background-color: #6C3109;
 	}
 }

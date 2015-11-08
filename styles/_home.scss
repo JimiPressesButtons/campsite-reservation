@@ -1,13 +1,65 @@
 @import 'variables';
 
 #homepage{
-	margin-left:8%;
-	padding: 1em;
-	background-color:$boxNormal;
-	border: $border;
-	border-top:none;
-	.closeIcon{
-		float: right;
-		font-size: 1em;
+	background-color:darken($boxNormal,50%);
+	// border: $border;
+	// border-left:none;
+	// border-right: none;
+
+	#heroHeader{
+		// font-family: willow;
+		width:100%;
+		height: 10em;
+		padding: 2em;
+		background-color:#5E451C;
+		color: #D5D0C6;
+		margin:none;
 	}
+	.icon-block{
+		background-color:$topColor;
+		border-radius: 2%;
+		height: 18em;
+		padding: 1em;
+
+		.icon-color{
+			margin-top:none;
+		}
+	}
+	#davis{
+		background: linear-gradient(
+	    rgba(75, 75, 75, 0.55), 
+	    rgba(75, 75, 75, 0.55)
+	    ),url(../images/davis-mountains.jpg)center center no-repeat;
+		width: 100%;
+		height:40em;
+		background-size:cover;
+		#searchParkButton{
+			background-color: $topColor;
+			color:black;
+		}
+	}
+	#enchanted{
+		background: linear-gradient(
+	    rgba(75, 75, 75, 0.55), 
+	    rgba(75, 75, 75, 0.55)
+	    ),url(../images/Enchanted-Rock.jpg)center center no-repeat;
+	    width: 100%;
+		height:40em;
+		background-size:cover;
+	}
+	#bracken{
+		background: linear-gradient(
+	    rgba(75, 75, 75, 0.55), 
+	    rgba(75, 75, 75, 0.55)
+	    ),url(../images/Bracken-ferns.jpg)center center no-repeat;
+	    width: 100%;
+		height:40em;
+		background-size:cover;
+	}
+}
+.box-shadow--2dp {
+   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12);
+}
+.box-shadow--6dp {
+  box-shadow: 0 6px 10px 0 rgba(0, 0, 0, .14), 0 1px 18px 0 rgba(0, 0, 0, .12), 0 3px 5px -1px rgba(0, 0, 0, .2);
 }

@@ -11,17 +11,18 @@ module.exports = React.createClass({
 						<span>Texas Parks & WildLife</span>
 					</a>
 				</div>
-				<div className = 'user-dropdown'>
-					<a href='#'>
-						<img className = 'avatar size32' src='../../images/lIHOd7iM_normal.jpg' />
-					</a>
-				</div>
 			</div>
 		);
 	}
 });
 
 
+
+// <div className = 'user-dropdown'>
+// 					<a href='#'>
+// 						<img className = 'avatar size32' src='../../images/lIHOd7iM_normal.jpg' />
+// 					</a>
+// 				</div>
 // <div class="nav-wrapper">
 //       <a href="#" class="brand-logo">Logo</a>
 //       <ul id="nav-mobile" class="right hide-on-med-and-down">

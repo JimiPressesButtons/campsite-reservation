@@ -34933,7 +34933,7 @@ module.exports = React.createClass({
 	render: function render() {
 		return React.createElement(
 			'div',
-			{ id: 'campsiteDetail', className: 'col m7' },
+			{ id: 'campsiteDetail', className: 'col m7 offset-m1' },
 			React.createElement('img', { className: 'closeIcon', onClick: this.closePark, src: '../../images/ic_highlight_off_18pt_2x.png' }),
 			React.createElement(
 				'h3',
@@ -34942,7 +34942,7 @@ module.exports = React.createClass({
 			),
 			React.createElement(
 				'button',
-				{ onClick: this.selectCampsite },
+				{ id: 'campsiteSelectButton', className: 'btn  waves-effect', onClick: this.selectCampsite },
 				'Select'
 			)
 		);
@@ -35019,7 +35019,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"../models/CampsiteModel.js":174,"../models/ParkModel.js":175,"../models/ReservationModel.js":176,"backbone":1,"backbone/node_modules/underscore":2,"react":163}],165:[function(require,module,exports){
+},{"../models/CampsiteModel.js":175,"../models/ParkModel.js":176,"../models/ReservationModel.js":177,"backbone":1,"backbone/node_modules/underscore":2,"react":163}],165:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -35070,9 +35070,10 @@ module.exports = React.createClass({
 		var campsites = this.state.campsites.map(function (campsite) {
 			var boundItemClick = _this2.onCampsiteSelect.bind(_this2, campsite);
 			return React.createElement(
-				'div',
-				{ onClick: boundItemClick, className: 'listItem' },
-				campsite
+				'li',
+				{ onClick: boundItemClick, className: 'collection-item listCampType' },
+				campsite,
+				' '
 			);
 		});
 		return React.createElement(
@@ -35084,26 +35085,43 @@ module.exports = React.createClass({
 				React.createElement(StatusBarComponent, { status: 'campSelect' }),
 				React.createElement(
 					'div',
-					{ id: 'selectList', className: 'col m4' },
+					{ id: 'selectList', className: 'col m3' },
 					React.createElement(
 						'ul',
-						null,
-						' ',
-						campsites,
-						' '
+						{ className: 'collection with-header' },
+						React.createElement(
+							'li',
+							{ className: 'collection-header listCampType' },
+							React.createElement(
+								'h5',
+								null,
+								'Campsite Type'
+							)
+						),
+						campsites
 					)
 				),
 				React.createElement(
 					'div',
-					{ ref: 'calendar', id: 'calendar', className: 'col m7' },
+					{ ref: 'calendar', id: 'calendar', className: 'col m7 offset-m1' },
 					React.createElement(
 						'form',
 						{ id: 'dates', onSubmit: this.saveDate },
-						React.createElement('input', { type: 'date', ref: 'startDate' }),
-						React.createElement('input', { type: 'date', ref: 'endDate' }),
+						React.createElement(
+							'label',
+							null,
+							'Arrival Date'
+						),
+						React.createElement('input', { type: 'date', className: 'datepicker', ref: 'startDate' }),
+						React.createElement(
+							'label',
+							null,
+							'Departure Date'
+						),
+						React.createElement('input', { type: 'date', className: 'datepicker', ref: 'endDate' }),
 						React.createElement(
 							'button',
-							null,
+							{ id: 'calendarButton', className: 'btn  waves-effect' },
 							'Save the date'
 						)
 					)
@@ -35134,7 +35152,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"../../node_modules/moment-range/dist/moment-range.min.js":5,"../../node_modules/moment/min/moment.min.js":6,"../models/CampsiteModel.js":174,"../models/ParkModel.js":175,"./CampsiteDetailsComponent.js":164,"./StatusBarComponent.js":172,"backbone":1,"backbone/node_modules/underscore":2,"react":163}],166:[function(require,module,exports){
+},{"../../node_modules/moment-range/dist/moment-range.min.js":5,"../../node_modules/moment/min/moment.min.js":6,"../models/CampsiteModel.js":175,"../models/ParkModel.js":176,"./CampsiteDetailsComponent.js":164,"./StatusBarComponent.js":173,"backbone":1,"backbone/node_modules/underscore":2,"react":163}],166:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -35173,7 +35191,7 @@ module.exports = React.createClass({
 
 // NZCzkWMr0J
 
-},{"./StatusBarComponent.js":172,"backbone":1,"react":163}],167:[function(require,module,exports){
+},{"./StatusBarComponent.js":173,"backbone":1,"react":163}],167:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -35231,7 +35249,9 @@ module.exports = React.createClass({
 				reservation
 			);
 		});
-
+		// 		<div id='selectList' className ='col m3'>
+		// 	<ul>{this.state.reservationList}</ul>
+		// </div>
 		return React.createElement(
 			'div',
 			{ className: 'container' },
@@ -35241,60 +35261,241 @@ module.exports = React.createClass({
 				React.createElement(StatusBarComponent, { status: 'confirmSelection' }),
 				React.createElement(
 					'div',
-					{ id: 'selectList', className: 'col m4' },
+					{ id: 'tango', className: 'col m8 offset-m2' },
 					React.createElement(
-						'ul',
-						null,
-						this.state.reservationList
-					)
-				),
-				React.createElement(
-					'div',
-					{ ref: 'calendar', id: 'calendar', className: 'col m7' },
-					React.createElement(
-						'h3',
-						null,
-						this.state.park
-					),
-					React.createElement(
-						'h4',
-						null,
-						this.state.campsiteType
-					),
-					React.createElement(
-						'h5',
-						null,
-						this.state.startDate
-					),
-					React.createElement(
-						'h5',
-						null,
-						this.state.endDate
-					),
-					React.createElement(
-						'button',
-						{ onClick: this.onCancel },
-						'Cancel'
-					),
-					React.createElement(
-						'button',
-						{ onClick: this.onConfirm },
-						'Confirm'
+						'div',
+						{ id: 'tangoCash', className: 'col m12' },
+						React.createElement(
+							'h3',
+							null,
+							this.state.park
+						),
+						React.createElement(
+							'h4',
+							null,
+							this.state.campsiteType
+						),
+						React.createElement(
+							'h5',
+							null,
+							this.state.startDate
+						),
+						React.createElement(
+							'h5',
+							null,
+							this.state.endDate
+						),
+						React.createElement(
+							'button',
+							{ className: 'confirmationButton btn waves-effect', onClick: this.onConfirm },
+							'Confirm'
+						),
+						React.createElement(
+							'button',
+							{ className: 'confirmationButton btn waves-effect', onClick: this.onCancel },
+							'Cancel'
+						)
 					)
 				)
 			)
 		);
 	},
 	onCancel: function onCancel() {
-		console.log('in cancel');
+		this.props.router.navigate('#park', { trigger: true });
 	},
 	onConfirm: function onConfirm() {
-		console.log('in confirm');
 		this.props.router.navigate('#checkout/' + this.props.reservationId, { trigger: true });
 	}
 });
 
-},{"../models/CampsiteModel.js":174,"../models/ParkModel.js":175,"../models/ReservationModel.js":176,"./StatusBarComponent.js":172,"backbone":1,"react":163}],168:[function(require,module,exports){
+},{"../models/CampsiteModel.js":175,"../models/ParkModel.js":176,"../models/ReservationModel.js":177,"./StatusBarComponent.js":173,"backbone":1,"react":163}],168:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
+var Backbone = require('backbone');
+
+module.exports = React.createClass({
+    displayName: 'exports',
+
+    componentWillMount: function componentWillMount() {
+        $(document).ready(function () {
+            $('.parallax').parallax();
+        });
+        // <div id='heroHeader'>
+        // 	<h1 className="center brand-title"></h1>
+        // </div>
+    },
+    render: function render() {
+        return React.createElement(
+            'div',
+            { id: 'homepage' },
+            React.createElement(
+                'div',
+                { id: 'index-banner' },
+                React.createElement(
+                    'div',
+                    { id: 'heroImage' },
+                    React.createElement(
+                        'div',
+                        { id: 'davis' },
+                        React.createElement(
+                            'div',
+                            { className: 'container' },
+                            React.createElement('br', null),
+                            React.createElement('br', null),
+                            React.createElement(
+                                'h1',
+                                { className: 'header center brand-title' },
+                                'Campsite Reservation'
+                            ),
+                            React.createElement(
+                                'div',
+                                { className: 'row center' },
+                                React.createElement(
+                                    'a',
+                                    { href: '#park', id: 'searchParkButton', className: 'btn-large waves-effect' },
+                                    'Search'
+                                )
+                            )
+                        )
+                    )
+                )
+            ),
+            React.createElement(
+                'div',
+                { className: 'container' },
+                React.createElement(
+                    'div',
+                    { className: 'section' },
+                    React.createElement(
+                        'div',
+                        { className: 'row' },
+                        React.createElement(
+                            'div',
+                            { className: 'col s12 m4' },
+                            React.createElement(
+                                'div',
+                                { className: 'icon-block box-shadow--6dp' },
+                                React.createElement(
+                                    'h3',
+                                    { className: 'center icon-color' },
+                                    React.createElement(
+                                        'i',
+                                        { className: 'material-icons' },
+                                        'supervisor_account'
+                                    )
+                                ),
+                                React.createElement(
+                                    'h5',
+                                    { className: 'center' },
+                                    'Stay Together'
+                                ),
+                                React.createElement(
+                                    'p',
+                                    { className: 'light' },
+                                    'Kin-Connect is making it easier than ever to stay in touch with your family members!'
+                                )
+                            )
+                        ),
+                        React.createElement(
+                            'div',
+                            { className: 'col s12 m4' },
+                            React.createElement(
+                                'div',
+                                { className: 'icon-block box-shadow--6dp' },
+                                React.createElement(
+                                    'h3',
+                                    { className: 'center icon-color' },
+                                    React.createElement(
+                                        'i',
+                                        { className: 'material-icons' },
+                                        'today'
+                                    )
+                                ),
+                                React.createElement(
+                                    'h5',
+                                    { className: 'center' },
+                                    'Stay Up to Date'
+                                ),
+                                React.createElement(
+                                    'p',
+                                    { className: 'light' },
+                                    'Kin-Connect allows your family to keep up with all of the upcoming family events! '
+                                )
+                            )
+                        ),
+                        React.createElement(
+                            'div',
+                            { className: 'col s12 m4' },
+                            React.createElement(
+                                'div',
+                                { className: 'icon-block box-shadow--6dp' },
+                                React.createElement(
+                                    'h3',
+                                    { className: 'center icon-color' },
+                                    React.createElement(
+                                        'i',
+                                        { className: 'material-icons' },
+                                        'view_list'
+                                    )
+                                ),
+                                React.createElement(
+                                    'h5',
+                                    { className: 'center' },
+                                    'Stay Talking'
+                                ),
+                                React.createElement(
+                                    'p',
+                                    { className: 'light' },
+                                    'Kin-Connect lets you enter recipes into a family-wide cookbook, no longer with you be asking how to make grandma\'s apple\'s pie!'
+                                )
+                            )
+                        )
+                    )
+                )
+            ),
+            React.createElement(
+                'div',
+                { id: 'index-banner' },
+                React.createElement(
+                    'div',
+                    { className: 'container' },
+                    React.createElement(
+                        'h1',
+                        { className: 'header center brand-title' },
+                        'Campsite Reservation'
+                    )
+                ),
+                React.createElement(
+                    'div',
+                    { id: 'enchanted' },
+                    '  '
+                )
+            ),
+            React.createElement(
+                'div',
+                { id: 'index-banner' },
+                React.createElement(
+                    'div',
+                    { className: 'container' },
+                    React.createElement(
+                        'h1',
+                        { className: 'header center brand-title' },
+                        'Campsite Reservation'
+                    )
+                ),
+                React.createElement(
+                    'div',
+                    { id: 'bracken' },
+                    '  '
+                )
+            )
+        );
+    }
+
+});
+
+},{"backbone":1,"react":163}],169:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -35320,20 +35521,16 @@ module.exports = React.createClass({
 						'Texas Parks & WildLife'
 					)
 				)
-			),
-			React.createElement(
-				'div',
-				{ className: 'user-dropdown' },
-				React.createElement(
-					'a',
-					{ href: '#' },
-					React.createElement('img', { className: 'avatar size32', src: '../../images/lIHOd7iM_normal.jpg' })
-				)
 			)
 		);
 	}
 });
 
+// <div className = 'user-dropdown'>
+// 					<a href='#'>
+// 						<img className = 'avatar size32' src='../../images/lIHOd7iM_normal.jpg' />
+// 					</a>
+// 				</div>
 // <div class="nav-wrapper">
 //       <a href="#" class="brand-logo">Logo</a>
 //       <ul id="nav-mobile" class="right hide-on-med-and-down">
@@ -35343,7 +35540,7 @@ module.exports = React.createClass({
 //       </ul>
 //     </div>
 
-},{"backbone":1,"react":163}],169:[function(require,module,exports){
+},{"backbone":1,"react":163}],170:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -35373,7 +35570,7 @@ module.exports = React.createClass({
 	render: function render() {
 		return React.createElement(
 			'div',
-			{ id: 'parkDetail', className: 'col m7' },
+			{ id: 'parkDetail', className: 'col m8 offset-m1' },
 			React.createElement('img', { className: 'closeIcon', onClick: this.closePark, src: '../../images/ic_highlight_off_18pt_2x.png' }),
 			React.createElement(
 				'h3',
@@ -35382,7 +35579,7 @@ module.exports = React.createClass({
 			),
 			React.createElement(
 				'button',
-				{ onClick: this.selectPark },
+				{ className: 'btn  waves-effect', onClick: this.selectPark },
 				'Select'
 			)
 		);
@@ -35397,7 +35594,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"../models/ParkModel.js":175,"backbone":1,"react":163}],170:[function(require,module,exports){
+},{"../models/ParkModel.js":176,"backbone":1,"react":163}],171:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -35447,8 +35644,8 @@ module.exports = React.createClass({
 		var parks = this.state.parkList.map(function (park) {
 			var boundItemClick = _this2.onParkSelect.bind(_this2, park);
 			return React.createElement(
-				'div',
-				{ onClick: boundItemClick, className: 'listItem', key: park.id },
+				'li',
+				{ onClick: boundItemClick, className: 'collection-item', key: park.id },
 				park.get('name')
 			);
 		});
@@ -35461,230 +35658,258 @@ module.exports = React.createClass({
 				React.createElement(StatusBarComponent, { status: 'parkSelect' }),
 				React.createElement(
 					'div',
-					{ id: 'selectList', className: 'col m4' },
-					React.createElement(
-						'form',
-						{ onSubmit: this.onSearchPark },
-						React.createElement('input', { ref: 'searchPark', placeholder: 'By Park Name', type: 'text' })
-					),
+					{ id: 'selectParkList', className: 'col m3' },
 					React.createElement(
 						'ul',
-						null,
-						' ',
-						parks,
-						' '
+						{ className: 'collection with-header' },
+						React.createElement(
+							'li',
+							{ className: 'collection-header listItem' },
+							React.createElement(
+								'h5',
+								null,
+								'State Parks'
+							)
+						),
+						parks
 					)
 				),
-				React.createElement('div', { ref: 'map', id: 'map', className: 'col m8' }),
+				React.createElement('div', { ref: 'map', id: 'map', className: 'col m8 offset-m1' }),
 				this.state.parkSelected ? React.createElement(ParkDetailsComponent, { router: this.props.router, park: this.state.parkSelected, onClose: this.onParkClose }) : null,
 				React.createElement(
 					'div',
-					{ ref: 'filter', id: 'filter', className: 'col s6' },
+					{ id: 'filterBox', className: 'col m8 offset-m1' },
 					React.createElement(
-						'h3',
-						null,
-						'Filter'
-					),
-					React.createElement(
-						'form',
-						{ onSubmit: this.onFilter },
+						'ul',
+						{ id: 'filter', className: 'collapsible col m12', 'data-collapsible': 'accordion' },
 						React.createElement(
-							'select',
-							{ ref: 'activity', id: 'activityList', className: 'three columns' },
+							'li',
+							null,
 							React.createElement(
-								'option',
-								{ value: '', disabled: true, selected: true },
-								'Select your option'
+								'div',
+								{ className: 'collapsible-header' },
+								React.createElement(
+									'h5',
+									null,
+									'Filter'
+								)
 							),
 							React.createElement(
-								'option',
-								{ ref: 'beachOceanSwimming', value: 'Beach/Ocean Swimming', key: '1' },
-								'Beach / Ocean Swimming'
-							),
-							React.createElement(
-								'option',
-								{ ref: 'biking', value: 'Biking', key: '2' },
-								'Biking'
-							),
-							React.createElement(
-								'option',
-								{ ref: 'birding', value: 'Birding', key: '3' },
-								'Birding'
-							),
-							React.createElement(
-								'option',
-								{ ref: 'boating', value: 'Boating & Paddling', key: '4' },
-								'Boating & Paddling'
-							),
-							React.createElement(
-								'option',
-								{ ref: 'camping', value: 'Camping', key: '5' },
-								'Camping'
-							),
-							React.createElement(
-								'option',
-								{ ref: 'caving', value: 'Caving', key: '6' },
-								'Caving'
-							),
-							React.createElement(
-								'option',
-								{ ref: 'equestrianDayUse', value: 'Equestrian Day Use', key: '7' },
-								'Equestrian Day Use'
-							),
-							React.createElement(
-								'option',
-								{ ref: 'equestrianOvernightUse', value: 'Equestrian Overnight Use', key: '8' },
-								'Equestrian Overnight Use'
-							),
-							React.createElement(
-								'option',
-								{ ref: 'fishing', value: 'Fishing', key: '9' },
-								'Fishing'
-							),
-							React.createElement(
-								'option',
-								{ ref: 'geocaching', value: 'Geocaching', key: '10' },
-								'Geocaching'
-							),
-							React.createElement(
-								'option',
-								{ ref: 'golfing', value: 'Golfing', key: '11' },
-								'Golfing'
-							),
-							React.createElement(
-								'option',
-								{ ref: 'hiking', value: 'Hiking', key: '12' },
-								'Hiking'
-							),
-							React.createElement(
-								'option',
-								{ ref: 'history', value: 'History', key: '13' },
-								'History'
-							),
-							React.createElement(
-								'option',
-								{ ref: 'horseRentals', value: 'Horse Rentals', key: '14' },
-								'Horse Rentals'
-							),
-							React.createElement(
-								'option',
-								{ ref: 'hunting', value: 'Hunting', key: '15' },
-								'Hunting'
-							),
-							React.createElement(
-								'option',
-								{ ref: 'lakeRiverSwimming', value: 'Lake/River Swimming', key: '16' },
-								'Lake/River Swimming'
-							),
-							React.createElement(
-								'option',
-								{ ref: 'offRoading', value: 'Off-Roading', key: '17' },
-								'Off-Roading'
-							),
-							React.createElement(
-								'option',
-								{ ref: 'overnightLodging', value: 'Overnight Lodging (non-camping)', key: '18' },
-								'Overnight Lodging (non-camping)'
-							),
-							React.createElement(
-								'option',
-								{ ref: 'photography', value: 'Photography', key: '19' },
-								'Photography'
-							),
-							React.createElement(
-								'option',
-								{ ref: 'poolSwimming', value: 'Pool Swimming', key: '20' },
-								'Pool Swimming'
-							),
-							React.createElement(
-								'option',
-								{ ref: 'rockClimbing', value: 'Rock Climbing', key: '21' },
-								'Rock Climbing'
-							),
-							React.createElement(
-								'option',
-								{ ref: 'starGazing', value: 'Star Gazing', key: '22' },
-								'Star Gazing'
-							),
-							React.createElement(
-								'option',
-								{ ref: 'wheelchairAccessibility', value: 'Wheelchair Accessibility', key: '23' },
-								'Wheelchair Accessibility'
+								'div',
+								{ className: 'collapsible-body' },
+								React.createElement(
+									'form',
+									{ onSubmit: this.onFilter },
+									React.createElement(
+										'label',
+										null,
+										'Activity'
+									),
+									React.createElement(
+										'select',
+										{ ref: 'activity', className: 'browser-default' },
+										React.createElement(
+											'option',
+											{ value: '' },
+											'Select your option'
+										),
+										React.createElement(
+											'option',
+											{ ref: 'beachOceanSwimming', value: 'Beach/Ocean Swimming', key: '1' },
+											'Beach / Ocean Swimming'
+										),
+										React.createElement(
+											'option',
+											{ ref: 'biking', value: 'Biking', key: '2' },
+											'Biking'
+										),
+										React.createElement(
+											'option',
+											{ ref: 'birding', value: 'Birding', key: '3' },
+											'Birding'
+										),
+										React.createElement(
+											'option',
+											{ ref: 'boating', value: 'Boating & Paddling', key: '4' },
+											'Boating & Paddling'
+										),
+										React.createElement(
+											'option',
+											{ ref: 'camping', value: 'Camping', key: '5' },
+											'Camping'
+										),
+										React.createElement(
+											'option',
+											{ ref: 'caving', value: 'Caving', key: '6' },
+											'Caving'
+										),
+										React.createElement(
+											'option',
+											{ ref: 'equestrianDayUse', value: 'Equestrian Day Use', key: '7' },
+											'Equestrian Day Use'
+										),
+										React.createElement(
+											'option',
+											{ ref: 'equestrianOvernightUse', value: 'Equestrian Overnight Use', key: '8' },
+											'Equestrian Overnight Use'
+										),
+										React.createElement(
+											'option',
+											{ ref: 'fishing', value: 'Fishing', key: '9' },
+											'Fishing'
+										),
+										React.createElement(
+											'option',
+											{ ref: 'geocaching', value: 'Geocaching', key: '10' },
+											'Geocaching'
+										),
+										React.createElement(
+											'option',
+											{ ref: 'golfing', value: 'Golfing', key: '11' },
+											'Golfing'
+										),
+										React.createElement(
+											'option',
+											{ ref: 'hiking', value: 'Hiking', key: '12' },
+											'Hiking'
+										),
+										React.createElement(
+											'option',
+											{ ref: 'history', value: 'History', key: '13' },
+											'History'
+										),
+										React.createElement(
+											'option',
+											{ ref: 'horseRentals', value: 'Horse Rentals', key: '14' },
+											'Horse Rentals'
+										),
+										React.createElement(
+											'option',
+											{ ref: 'hunting', value: 'Hunting', key: '15' },
+											'Hunting'
+										),
+										React.createElement(
+											'option',
+											{ ref: 'lakeRiverSwimming', value: 'Lake/River Swimming', key: '16' },
+											'Lake/River Swimming'
+										),
+										React.createElement(
+											'option',
+											{ ref: 'offRoading', value: 'Off-Roading', key: '17' },
+											'Off-Roading'
+										),
+										React.createElement(
+											'option',
+											{ ref: 'overnightLodging', value: 'Overnight Lodging (non-camping)', key: '18' },
+											'Overnight Lodging (non-camping)'
+										),
+										React.createElement(
+											'option',
+											{ ref: 'photography', value: 'Photography', key: '19' },
+											'Photography'
+										),
+										React.createElement(
+											'option',
+											{ ref: 'poolSwimming', value: 'Pool Swimming', key: '20' },
+											'Pool Swimming'
+										),
+										React.createElement(
+											'option',
+											{ ref: 'rockClimbing', value: 'Rock Climbing', key: '21' },
+											'Rock Climbing'
+										),
+										React.createElement(
+											'option',
+											{ ref: 'starGazing', value: 'Star Gazing', key: '22' },
+											'Star Gazing'
+										),
+										React.createElement(
+											'option',
+											{ ref: 'wheelchairAccessibility', value: 'Wheelchair Accessibility', key: '23' },
+											'Wheelchair Accessibility'
+										)
+									),
+									React.createElement(
+										'label',
+										null,
+										'Campsite Type'
+									),
+									React.createElement(
+										'select',
+										{ ref: 'campsite', id: 'campsiteList', className: 'browser-default' },
+										React.createElement(
+											'option',
+											{ value: '' },
+											'Select your option'
+										),
+										React.createElement(
+											'option',
+											{ ref: 'tent', value: 'tent' },
+											'Tent'
+										),
+										React.createElement(
+											'option',
+											{ ref: 'wtr', value: 'wtr' },
+											'Water'
+										),
+										React.createElement(
+											'option',
+											{ ref: 'wtr,elec', value: 'wtr,elec' },
+											'Water, Electrical'
+										),
+										React.createElement(
+											'option',
+											{ ref: 'wtr,elec,sewer', value: 'wtr,elec,sewer' },
+											'Water, Electrical, Sewer'
+										),
+										React.createElement(
+											'option',
+											{ ref: 'wtr,elec50', value: 'wtr,elec50' },
+											'Water, Electrical 50amp'
+										),
+										React.createElement(
+											'option',
+											{ ref: 'wtr,elec50,sewer', value: 'wtr,elec50,sewer' },
+											'Water, Electrical 50amp, Sewer'
+										),
+										React.createElement(
+											'option',
+											{ ref: 'primitive', value: 'primitive' },
+											'Primitive'
+										),
+										React.createElement(
+											'option',
+											{ ref: 'primitive (hike in)', value: 'primitive (hike in)' },
+											'Primitive (must hike in)'
+										),
+										React.createElement(
+											'option',
+											{ ref: 'cabin', value: 'cabin' },
+											'Cabin'
+										),
+										React.createElement(
+											'option',
+											{ ref: 'yurt', value: 'yurt' },
+											'Yurt'
+										),
+										React.createElement(
+											'option',
+											{ ref: 'screenShelter', value: 'screenShelter' },
+											'Screened Shelter'
+										),
+										React.createElement(
+											'option',
+											{ ref: 'backCountry', value: 'backCountry' },
+											'Backcountry'
+										)
+									),
+									React.createElement(
+										'button',
+										{ id: 'filterButton', className: 'btn  waves-effect ' },
+										' Submit'
+									)
+								)
 							)
-						),
-						React.createElement(
-							'select',
-							{ ref: 'campsite', id: 'campsiteList' },
-							React.createElement(
-								'option',
-								{ value: '', disabled: true, selected: true },
-								'Select your option'
-							),
-							React.createElement(
-								'option',
-								{ ref: 'tent', value: 'tent' },
-								'Tent'
-							),
-							React.createElement(
-								'option',
-								{ ref: 'wtr', value: 'wtr' },
-								'Water'
-							),
-							React.createElement(
-								'option',
-								{ ref: 'wtr,elec', value: 'wtr,elec' },
-								'Water, Electrical'
-							),
-							React.createElement(
-								'option',
-								{ ref: 'wtr,elec,sewer', value: 'wtr,elec,sewer' },
-								'Water, Electrical, Sewer'
-							),
-							React.createElement(
-								'option',
-								{ ref: 'wtr,elec50', value: 'wtr,elec50' },
-								'Water, Electrical 50amp'
-							),
-							React.createElement(
-								'option',
-								{ ref: 'wtr,elec50,sewer', value: 'wtr,elec50,sewer' },
-								'Water, Electrical 50amp, Sewer'
-							),
-							React.createElement(
-								'option',
-								{ ref: 'primitive', value: 'primitive' },
-								'Primitive'
-							),
-							React.createElement(
-								'option',
-								{ ref: 'primitive (hike in)', value: 'primitive (hike in)' },
-								'Primitive (must hike in)'
-							),
-							React.createElement(
-								'option',
-								{ ref: 'cabin', value: 'cabin' },
-								'Cabin'
-							),
-							React.createElement(
-								'option',
-								{ ref: 'yurt', value: 'yurt' },
-								'Yurt'
-							),
-							React.createElement(
-								'option',
-								{ ref: 'screenShelter', value: 'screenShelter' },
-								'Screened Shelter'
-							),
-							React.createElement(
-								'option',
-								{ ref: 'backCountry', value: 'backCountry' },
-								'Backcountry'
-							)
-						),
-						React.createElement(
-							'button',
-							{ id: 'filterButton' },
-							' Submit'
 						)
 					)
 				)
@@ -35777,7 +36002,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"../models/CampsiteModel.js":174,"../models/ParkModel.js":175,"./ParkDetailsComponent.js":169,"./StatusBarComponent.js":172,"backbone":1,"backbone/node_modules/underscore":2,"react":163}],171:[function(require,module,exports){
+},{"../models/CampsiteModel.js":175,"../models/ParkModel.js":176,"./ParkDetailsComponent.js":170,"./StatusBarComponent.js":173,"backbone":1,"backbone/node_modules/underscore":2,"react":163}],172:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -35789,10 +36014,9 @@ module.exports = React.createClass({
 	render: function render() {
 		return React.createElement('div', null);
 	}
-
 });
 
-},{"backbone":1,"react":163}],172:[function(require,module,exports){
+},{"backbone":1,"react":163}],173:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -35812,25 +36036,25 @@ module.exports = React.createClass({
 	componentDidMount: function componentDidMount() {},
 	render: function render() {
 		return React.createElement(
-			'div',
-			{ id: 'statusBar', className: 'eleven columns' },
+			'ul',
+			{ id: 'statusBar', className: 'eleven columns breadcumb' },
 			React.createElement(
-				'div',
+				'li',
 				{ className: 'statusTag' },
 				'Select Park'
 			),
 			React.createElement(
-				'div',
+				'li',
 				{ className: 'statusTag' },
 				'Choose Campsite'
 			),
 			React.createElement(
-				'div',
+				'li',
 				{ className: 'statusTag' },
 				'Confirmation'
 			),
 			React.createElement(
-				'div',
+				'li',
 				{ className: 'statusTag' },
 				'Checkout'
 			)
@@ -35840,7 +36064,7 @@ module.exports = React.createClass({
 });
 React.createElement('div', { 'class': 'css-shapes-preview' });
 
-},{"backbone":1,"react":163}],173:[function(require,module,exports){
+},{"backbone":1,"react":163}],174:[function(require,module,exports){
 'use strict';
 var React = require('react');
 var ReactDOM = require('react-dom');
@@ -35851,11 +36075,12 @@ window.jQuery = $;
 Parse.initialize("9sd2q0JxfBh6eWh1PVgYsW2wrFndlmUlT7tYa35d", "Palf0mZkw2r2fS53EDabTT3TIPXAxid86PfP4nZb");
 
 var NavComponent = require('./components/NavComponent.js');
-var ReserveHomeComponent = require('./components/ReserveHomeComponent.js');
+var HomeComponent = require('./components/HomeComponent.js');
 var ParkSelectionComponent = require('./components/ParkSelectionComponent.js');
 var CampsiteSelectionComponent = require('./components/CampsiteSelectionComponent.js');
 var ConfirmSelectionComponent = require('./components/ConfirmSelectionComponent.js');
 var CheckoutComponent = require('./components/CheckoutComponent.js');
+var ProfileComponent = require('./components/ProfileComponent.js');
 var main = document.getElementById('main');
 var nav = document.getElementById('nav');
 var Router = Backbone.Router.extend({
@@ -35864,10 +36089,11 @@ var Router = Backbone.Router.extend({
 		'park': 'park',
 		'campsite/:id': 'campsite',
 		'confirmSelection/:id': 'confirmSelection',
-		'checkout/:id': 'checkout'
+		'checkout/:id': 'checkout',
+		'profile/:id': 'profile'
 	},
 	home: function home() {
-		ReactDOM.render(React.createElement(ReserveHomeComponent, null), main);
+		ReactDOM.render(React.createElement(HomeComponent, null), main);
 	},
 	park: function park() {
 		ReactDOM.render(React.createElement(ParkSelectionComponent, { router: r }), main);
@@ -35880,6 +36106,9 @@ var Router = Backbone.Router.extend({
 	},
 	checkout: function checkout(id) {
 		ReactDOM.render(React.createElement(CheckoutComponent, { reservationId: id, router: r }), main);
+	},
+	profile: function profile() {
+		ReactDOM.render(React.createElement(ProfileComponent, { router: r }), main);
 	}
 });
 
@@ -35888,28 +36117,28 @@ Backbone.history.start();
 
 ReactDOM.render(React.createElement(NavComponent, null), nav);
 
-},{"./components/CampsiteSelectionComponent.js":165,"./components/CheckoutComponent.js":166,"./components/ConfirmSelectionComponent.js":167,"./components/NavComponent.js":168,"./components/ParkSelectionComponent.js":170,"./components/ReserveHomeComponent.js":171,"backbone":1,"jquery":4,"react":163,"react-dom":8}],174:[function(require,module,exports){
+},{"./components/CampsiteSelectionComponent.js":165,"./components/CheckoutComponent.js":166,"./components/ConfirmSelectionComponent.js":167,"./components/HomeComponent.js":168,"./components/NavComponent.js":169,"./components/ParkSelectionComponent.js":171,"./components/ProfileComponent.js":172,"backbone":1,"jquery":4,"react":163,"react-dom":8}],175:[function(require,module,exports){
 'use strict';
 
 module.exports = Parse.Object.extend({
   className: 'Campsites'
 });
 
-},{}],175:[function(require,module,exports){
+},{}],176:[function(require,module,exports){
 'use strict';
 
 module.exports = Parse.Object.extend({
   className: 'Parks'
 });
 
-},{}],176:[function(require,module,exports){
+},{}],177:[function(require,module,exports){
 'use strict';
 
 module.exports = Parse.Object.extend({
   className: 'Reservations'
 });
 
-},{}]},{},[173])
+},{}]},{},[174])
 
 
 //# sourceMappingURL=bundle.js.map

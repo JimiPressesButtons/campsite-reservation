@@ -50,32 +50,34 @@ module.exports = React.createClass({
 				);
 			}
 		);
-
+					// 		<div id='selectList' className ='col m3'>
+					// 	<ul>{this.state.reservationList}</ul>
+					// </div>
 		return(
 			<div className='container'>
 				<div className='row'>
 					<StatusBarComponent status='confirmSelection'/>
-					<div id='selectList' className ='col m4'>
-						<ul>{this.state.reservationList}</ul>
-					</div>
-					<div ref='calendar'id='calendar'className ='col m7'>
-						<h3>{this.state.park}</h3>
-						<h4>{this.state.campsiteType}</h4>
-						<h5>{this.state.startDate}</h5>
-						<h5>{this.state.endDate}</h5>
-						<button onClick={this.onCancel}>Cancel</button>
-						<button onClick={this.onConfirm}>Confirm</button>
+
+					<div id='tango'className ='col m8 offset-m2'>
+						<div id='tangoCash'className='col m12'>
+							<h3>{this.state.park}</h3>
+							<h4>{this.state.campsiteType}</h4>
+							<h5>{this.state.startDate}</h5>
+							<h5>{this.state.endDate}</h5>
+							<button className='confirmationButton btn waves-effect' onClick={this.onConfirm}>Confirm</button>
+							<button className='confirmationButton btn waves-effect' onClick={this.onCancel}>Cancel</button>
+							
+						</div>
 					</div>		
 				</div>
 			</div>
 		);
 	},
 	onCancel:function(){
-		console.log('in cancel');
+		this.props.router.navigate('#park', {trigger: true});
 
 	},
 	onConfirm:function(){
-		console.log('in confirm');
 		this.props.router.navigate('#checkout/'+this.props.reservationId, {trigger: true});
 	}
 });

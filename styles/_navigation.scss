@@ -1,17 +1,22 @@
 @import 'variables';
 
 .nav-wrapper{
-	height: 65px;
-	padding: 5px 1em;
+
+	padding:1em;
 	background-color: $baseTone;
 	color: white;
+	height: 4em;
+	box-sizing: border-box;
 	.image-div{
-		height:60px;
+		// height: 60px;
 		float: left;
+		height: 3em;
+
 		a span{
 			color: white;
 			text-decoration: none !important;
 			font-size: 2em;
+			margin-left: 2em;
 		}
 		img{
 			height:100%;
@@ -19,7 +24,6 @@
 	}
 	.user-dropdown{
 		float: right;
-		margin-top: 0.5em;
 		img{
 			border-radius: 50%;
 		}

@@ -10,8 +10,17 @@
 		border-bottom: $border;
 	}
 }
-#calendar{
-	background-color: $boxNormal;
+#tango{
+	background-color: #A9A177;
+	padding: 1em;
 	border: $border;
-	height: 25em;
+	#tangoCash{
+		background-color: #FFF;
+		.confirmationButton{
+			background-color::#6C3109;
+			float:right;
+			margin-left: 1em;
+			margin-bottom: 1.5em;
+		}
+	}
 }

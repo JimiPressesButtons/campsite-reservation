@@ -1,12 +1,13 @@
 @import 'variables';
 
-#selectList{
-	background-color: $boxNormal;
+.container{
+	width: 85%;
+}
+#selectParkList{
 	border: $border;
 	min-height: 30em;
+	background-color: #A9A177;
 	.listItem{
-		list-style-type: none;
-		padding-left: 0.25em;
 		border-bottom: $border;
 	}
 }
@@ -16,6 +17,24 @@
 	border: $border;
 	height: 25em;
 }
-#filter{
-	@extend #map;
+#filterButton{
+	background-color:#6C3109;
+	margin-top: 1em;
+	margin-bottom: 1em;
+	float:right;
+}
+#filterBox{
+	background-color: #A9A177;
+	padding: 0.5em;
+	border: $border;
+	border-top:none;
+	#filter{
+		background-color:#FFFFFF;
+	}
+}
+.collapsible-header{
+	padding: 0.25em;
+}
+.collapsible-body{
+
 }
