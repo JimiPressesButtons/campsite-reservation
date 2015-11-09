@@ -22,7 +22,7 @@ module.exports = React.createClass({
 	// },
 	render: function(){
 		return(
-			<div id= 'parkDetail'className ='col m8 offset-m1'> 
+			<div id= 'parkDetail'className ='col m8 offset-m1 box-shadow--9dp'> 
 				<img className='closeIcon' onClick={this.closePark} src='../../images/ic_highlight_off_18pt_2x.png' />
 				<h3>{this.props.park.get('name')}</h3>
 				<button className="btn  waves-effect" onClick={this.selectPark}>Select</button>

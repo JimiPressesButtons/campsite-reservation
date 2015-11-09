@@ -17,7 +17,7 @@ module.exports= React.createClass({
 	},
 	render:function(){
 		return(
-			<div id= 'campsiteDetail'className ='col m7 offset-m1'> 
+			<div id= 'campsiteDetail'className ='col m7 offset-m1 z-depth-3'> 
 				<img className='closeIcon' onClick={this.closePark} src='../../images/ic_highlight_off_18pt_2x.png' />
 				<h3>{this.props.campsiteType}</h3>
 				<button id='campsiteSelectButton'className="btn  waves-effect"onClick={this.selectCampsite}>Select</button>
@@ -80,7 +80,8 @@ module.exports= React.createClass({
 				var newReservation = new ReservationModel({
 					campsiteId: this.state.readyCampsites[randomCampsite],
 					startDate: new Date(this.props.startDate),
-					endDate: new Date(this.props.endDate)
+					endDate: new Date(this.props.endDate),
+					userId: Parse.User.current()
 				});
 				newReservation.save({
 					success: (u) => {

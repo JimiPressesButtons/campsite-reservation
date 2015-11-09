@@ -44,28 +44,34 @@ module.exports = React.createClass({
 			(campsite)=>{
 				let boundItemClick = this.onCampsiteSelect.bind(this, campsite);
 				return(
-					<li onClick={boundItemClick} className="collection-item listCampType" >{campsite} </li> 
+					<li onClick={boundItemClick} className="collection-item listCampType" >{campsite}</li> 
 				);
 			}
 		);
 		return(
-			<div className='container'>
+			<div className='container'>				
 				<div className='row'>
-					<StatusBarComponent status='campSelect'/>
-					<div id='selectList' className ='col m3'>
+					<div className='banner z-depth-2'>
+						<h2 className='center'>Campsite Type Selection</h2>
+					</div>	
+					<div id='campSelectList' className ='col m3 z-depth-3'>
 						<ul className='collection with-header'> 
 							<li className='collection-header listCampType'><h5>Campsite Type</h5></li>
 							{campsites} 
 						</ul>
 					</div>
 					<div ref='calendar'id='calendar'className ='col m7 offset-m1'>
-						<form id='dates' onSubmit={this.saveDate}>
-							<label>Arrival Date</label>
-							<input type='date' className='datepicker' ref='startDate' />
-							<label>Departure Date</label>
-							<input type='date' className='datepicker' ref='endDate' />
-							<button id='calendarButton'className="btn  waves-effect">Save the date</button>
-						</form>
+						<div id='calendarBox' className ='col m12'>
+							<div id='calendarInnerBox' className ='col m12'>
+								<form id='dates' onSubmit={this.saveDate}>
+									<label>Arrival Date</label>
+									<input type='date' className='datepicker' ref='startDate' />
+									<label>Departure Date</label>
+									<input type='date' className='datepicker' ref='endDate' />
+									<button id='calendarButton'className="btn  waves-effect">Save the date</button>
+								</form>
+							</div>
+						</div>
 					</div>
 					{this.state.campsiteSelected ? <CampsiteDetailsComponent 
 						router = {this.props.router} 

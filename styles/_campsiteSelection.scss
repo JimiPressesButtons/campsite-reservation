@@ -1,6 +1,6 @@
 @import 'variables';
 
-#selectList{
+#campSelectList{
 	border: $border;
     min-height: 30em;
     background-color: #A9A177;
@@ -10,13 +10,22 @@
     }
 }
 #calendar{
-	background-color: $boxNormal;
+	background-color: #A9A177;
 	border: $border;
-	height: 25em;
+    padding: none;
+    #calendarBox{
+        width:100%;
+        background-color: #A9A177;
+        padding: 1em;
+        #calendarInnerBox{
+            background-color:white;
+            padding: 1em;
+        }
+    }
     #calendarButton{
-    background-color:#6C3109;
-    margin-top: 1em;
-    margin-bottom: 1em;
-    float:right;
-}
+        background-color:#6C3109;
+        margin-top: 1em;
+        margin-bottom: 1em;
+        float:right;
+    }
 }

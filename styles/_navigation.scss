@@ -1,25 +1,27 @@
 @import 'variables';
 
-.nav-wrapper{
-
+nav .nav-wrapper{
 	padding:1em;
 	background-color: $baseTone;
 	color: white;
-	height: 4em;
-	box-sizing: border-box;
+	overflow:hidden;
+	display:block;
+	height: auto;
 	.image-div{
-		// height: 60px;
 		float: left;
-		height: 3em;
-
+		height: 4.5em;
 		a span{
 			color: white;
+			font-family: GillSans, Trebuchet, sans-serif;
 			text-decoration: none !important;
-			font-size: 2em;
-			margin-left: 2em;
+			font-size: 2.1em;
+			margin-left: 1em;
+			vertical-align: middle;
+
 		}
 		img{
 			height:100%;
+			vertical-align: middle;
 		}
 	}
 	.user-dropdown{
@@ -27,5 +29,10 @@
 		img{
 			border-radius: 50%;
 		}
+	}
+	.heroButton{
+		float: right;
+		margin-left: 2em;
+		background-color:$topColor;
 	}
 }

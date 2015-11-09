@@ -34933,7 +34933,7 @@ module.exports = React.createClass({
 	render: function render() {
 		return React.createElement(
 			'div',
-			{ id: 'campsiteDetail', className: 'col m7 offset-m1' },
+			{ id: 'campsiteDetail', className: 'col m7 offset-m1 z-depth-3' },
 			React.createElement('img', { className: 'closeIcon', onClick: this.closePark, src: '../../images/ic_highlight_off_18pt_2x.png' }),
 			React.createElement(
 				'h3',
@@ -35002,7 +35002,8 @@ module.exports = React.createClass({
 			var newReservation = new ReservationModel({
 				campsiteId: _this2.state.readyCampsites[randomCampsite],
 				startDate: new Date(_this2.props.startDate),
-				endDate: new Date(_this2.props.endDate)
+				endDate: new Date(_this2.props.endDate),
+				userId: Parse.User.current()
 			});
 			newReservation.save({
 				success: function success(u) {
@@ -35019,7 +35020,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"../models/CampsiteModel.js":175,"../models/ParkModel.js":176,"../models/ReservationModel.js":177,"backbone":1,"backbone/node_modules/underscore":2,"react":163}],165:[function(require,module,exports){
+},{"../models/CampsiteModel.js":178,"../models/ParkModel.js":179,"../models/ReservationModel.js":180,"backbone":1,"backbone/node_modules/underscore":2,"react":163}],165:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -35072,8 +35073,7 @@ module.exports = React.createClass({
 			return React.createElement(
 				'li',
 				{ onClick: boundItemClick, className: 'collection-item listCampType' },
-				campsite,
-				' '
+				campsite
 			);
 		});
 		return React.createElement(
@@ -35082,10 +35082,18 @@ module.exports = React.createClass({
 			React.createElement(
 				'div',
 				{ className: 'row' },
-				React.createElement(StatusBarComponent, { status: 'campSelect' }),
 				React.createElement(
 					'div',
-					{ id: 'selectList', className: 'col m3' },
+					{ className: 'banner z-depth-2' },
+					React.createElement(
+						'h2',
+						{ className: 'center' },
+						'Campsite Type Selection'
+					)
+				),
+				React.createElement(
+					'div',
+					{ id: 'campSelectList', className: 'col m3 z-depth-3' },
 					React.createElement(
 						'ul',
 						{ className: 'collection with-header' },
@@ -35105,24 +35113,32 @@ module.exports = React.createClass({
 					'div',
 					{ ref: 'calendar', id: 'calendar', className: 'col m7 offset-m1' },
 					React.createElement(
-						'form',
-						{ id: 'dates', onSubmit: this.saveDate },
+						'div',
+						{ id: 'calendarBox', className: 'col m12' },
 						React.createElement(
-							'label',
-							null,
-							'Arrival Date'
-						),
-						React.createElement('input', { type: 'date', className: 'datepicker', ref: 'startDate' }),
-						React.createElement(
-							'label',
-							null,
-							'Departure Date'
-						),
-						React.createElement('input', { type: 'date', className: 'datepicker', ref: 'endDate' }),
-						React.createElement(
-							'button',
-							{ id: 'calendarButton', className: 'btn  waves-effect' },
-							'Save the date'
+							'div',
+							{ id: 'calendarInnerBox', className: 'col m12' },
+							React.createElement(
+								'form',
+								{ id: 'dates', onSubmit: this.saveDate },
+								React.createElement(
+									'label',
+									null,
+									'Arrival Date'
+								),
+								React.createElement('input', { type: 'date', className: 'datepicker', ref: 'startDate' }),
+								React.createElement(
+									'label',
+									null,
+									'Departure Date'
+								),
+								React.createElement('input', { type: 'date', className: 'datepicker', ref: 'endDate' }),
+								React.createElement(
+									'button',
+									{ id: 'calendarButton', className: 'btn  waves-effect' },
+									'Save the date'
+								)
+							)
 						)
 					)
 				),
@@ -35152,7 +35168,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"../../node_modules/moment-range/dist/moment-range.min.js":5,"../../node_modules/moment/min/moment.min.js":6,"../models/CampsiteModel.js":175,"../models/ParkModel.js":176,"./CampsiteDetailsComponent.js":164,"./StatusBarComponent.js":173,"backbone":1,"backbone/node_modules/underscore":2,"react":163}],166:[function(require,module,exports){
+},{"../../node_modules/moment-range/dist/moment-range.min.js":5,"../../node_modules/moment/min/moment.min.js":6,"../models/CampsiteModel.js":178,"../models/ParkModel.js":179,"./CampsiteDetailsComponent.js":164,"./StatusBarComponent.js":176,"backbone":1,"backbone/node_modules/underscore":2,"react":163}],166:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -35191,7 +35207,7 @@ module.exports = React.createClass({
 
 // NZCzkWMr0J
 
-},{"./StatusBarComponent.js":173,"backbone":1,"react":163}],167:[function(require,module,exports){
+},{"./StatusBarComponent.js":176,"backbone":1,"react":163}],167:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -35210,7 +35226,10 @@ module.exports = React.createClass({
 			campsiteType: null,
 			startDate: null,
 			endDate: null,
-			park: null
+			park: null,
+			parkLat: null,
+			parkLng: null,
+			email: null
 		};
 	},
 	componentWillMount: function componentWillMount() {
@@ -35222,16 +35241,22 @@ module.exports = React.createClass({
 		reservationQuery.include(['campsiteId']);
 		reservationQuery.include(['campsiteId.parkId']);
 		reservationQuery.get(this.props.reservationId).then(function (reservations) {
-			console.log(reservations);
-			console.log(reservations.get('campsiteId').id);
-			console.log(reservations.get('campsiteId').get('type'));
-			console.log(reservations.get('campsiteId').get('parkId').get('name'));
-			console.log(reservations.get('startDate'));
-			console.log(reservations.get('endDate'));
 			_this.setState({ park: reservations.get('campsiteId').get('parkId').get('name') });
+			_this.setState({ parkLat: reservations.get('campsiteId').get('parkId').get('lat') });
+			_this.setState({ parkLng: reservations.get('campsiteId').get('parkId').get('lng') });
 			_this.setState({ campsiteType: reservations.get('campsiteId').get('type') });
 			_this.setState({ startDate: reservations.get('startDate').toString().substring(0, 15) });
 			_this.setState({ endDate: reservations.get('endDate').toString().substring(0, 15) });
+			_this.setState({ email: Parse.User.current().get('email') });
+		});
+	},
+	componentDidMount: function componentDidMount() {
+		var mapView = { lat: this.state.parkLat, lng: this.state.parkLng };
+		this.map = new google.maps.Map(this.refs.map, {
+			center: mapView,
+			zoom: 6,
+			scrollwheel: false,
+			mapTypeId: google.maps.MapTypeId.TERRAIN
 		});
 	},
 	componentDidMount: function componentDidMount() {
@@ -35257,14 +35282,22 @@ module.exports = React.createClass({
 			{ className: 'container' },
 			React.createElement(
 				'div',
+				{ className: 'banner z-depth-2' },
+				React.createElement(
+					'h2',
+					{ className: 'center' },
+					'Confirm Reservation'
+				)
+			),
+			React.createElement(
+				'div',
 				{ className: 'row' },
-				React.createElement(StatusBarComponent, { status: 'confirmSelection' }),
 				React.createElement(
 					'div',
-					{ id: 'tango', className: 'col m8 offset-m2' },
+					{ id: 'tango', className: 'col m12 z-depth-3' },
 					React.createElement(
 						'div',
-						{ id: 'tangoCash', className: 'col m12' },
+						{ id: 'tangoCash', className: 'col m6' },
 						React.createElement(
 							'h3',
 							null,
@@ -35286,6 +35319,11 @@ module.exports = React.createClass({
 							this.state.endDate
 						),
 						React.createElement(
+							'h5',
+							null,
+							this.state.email
+						),
+						React.createElement(
 							'button',
 							{ className: 'confirmationButton btn waves-effect', onClick: this.onConfirm },
 							'Confirm'
@@ -35295,7 +35333,8 @@ module.exports = React.createClass({
 							{ className: 'confirmationButton btn waves-effect', onClick: this.onCancel },
 							'Cancel'
 						)
-					)
+					),
+					React.createElement('div', { ref: 'map', id: 'map', className: 'col m5 offset-m1' })
 				)
 			)
 		);
@@ -35308,18 +35347,425 @@ module.exports = React.createClass({
 	}
 });
 
-},{"../models/CampsiteModel.js":175,"../models/ParkModel.js":176,"../models/ReservationModel.js":177,"./StatusBarComponent.js":173,"backbone":1,"react":163}],168:[function(require,module,exports){
+},{"../models/CampsiteModel.js":178,"../models/ParkModel.js":179,"../models/ReservationModel.js":180,"./StatusBarComponent.js":176,"backbone":1,"react":163}],168:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
 var Backbone = require('backbone');
 
 module.exports = React.createClass({
+	displayName: 'exports',
+
+	render: function render() {
+		return React.createElement(
+			'div',
+			{ id: 'footerBox', className: 'container' },
+			React.createElement(
+				'div',
+				{ className: 'row' },
+				React.createElement(
+					'div',
+					{ className: 'col m2' },
+					React.createElement(
+						'ul',
+						null,
+						React.createElement(
+							'li',
+							{ className: 'header' },
+							'About TPWD'
+						),
+						React.createElement(
+							'li',
+							null,
+							React.createElement(
+								'a',
+								{ href: '/about' },
+								'General Information'
+							)
+						),
+						React.createElement(
+							'li',
+							null,
+							React.createElement(
+								'a',
+								{ href: '/about' },
+								'Office Locations'
+							)
+						),
+						React.createElement(
+							'li',
+							{ className: 'mobile' },
+							React.createElement(
+								'a',
+								{ href: '/site/compact/' },
+								'Compact with Texans'
+							)
+						),
+						React.createElement(
+							'li',
+							null,
+							React.createElement(
+								'a',
+								{ href: '/about/tpw-commissioners' },
+								'TPW Commission'
+							)
+						),
+						React.createElement(
+							'li',
+							null,
+							React.createElement(
+								'a',
+								{ href: '/jobs/' },
+								'Jobs & Careers'
+							)
+						),
+						React.createElement(
+							'li',
+							null,
+							React.createElement(
+								'a',
+								{ href: '/volunteer' },
+								'Volunteer Opportunities'
+							)
+						),
+						React.createElement(
+							'li',
+							null,
+							React.createElement(
+								'a',
+								{ href: '/faq/' },
+								'FAQs'
+							)
+						)
+					)
+				),
+				React.createElement(
+					'div',
+					{ className: 'col m2' },
+					React.createElement(
+						'ul',
+						null,
+						React.createElement(
+							'li',
+							{ className: 'header' },
+							'Doing Business with TPWD'
+						),
+						React.createElement(
+							'li',
+							null,
+							React.createElement(
+								'a',
+								{ href: '/publications/pwdforms/' },
+								'Agency Forms'
+							)
+						),
+						React.createElement(
+							'li',
+							null,
+							React.createElement(
+								'a',
+								{ href: '/business/permits/' },
+								'Permits'
+							)
+						),
+						React.createElement(
+							'li',
+							null,
+							React.createElement(
+								'a',
+								{ href: '/business/grants/' },
+								'Grants & Assistance'
+							)
+						),
+						React.createElement(
+							'li',
+							null,
+							React.createElement(
+								'a',
+								{ href: '/business/bidops/current_bid_opportunities/' },
+								'Bids & Vendor Opportunities'
+							)
+						),
+						React.createElement(
+							'li',
+							null,
+							React.createElement(
+								'a',
+								{ href: '/business/surplus/' },
+								'Surplus Property'
+							)
+						),
+						React.createElement(
+							'li',
+							null,
+							React.createElement(
+								'a',
+								{ href: '/business/bidops/contracts/' },
+								'Transparency Contract Reports'
+							)
+						)
+					)
+				),
+				React.createElement(
+					'div',
+					{ className: 'col m2' },
+					React.createElement(
+						'ul',
+						null,
+						React.createElement(
+							'li',
+							{ className: 'header' },
+							'Resources'
+						),
+						React.createElement(
+							'li',
+							null,
+							React.createElement(
+								'a',
+								{ href: '/publications/' },
+								'Publications'
+							)
+						),
+						React.createElement(
+							'li',
+							{ className: 'mobile' },
+							React.createElement(
+								'a',
+								{ href: '/site/policies/privacy-and-security-policies' },
+								'Privacy & Security'
+							)
+						),
+						React.createElement(
+							'li',
+							{ className: 'mobile' },
+							React.createElement(
+								'a',
+								{ href: '/site/accessibility/' },
+								'Accessibility Policy'
+							)
+						),
+						React.createElement(
+							'li',
+							{ className: 'mobile' },
+							React.createElement(
+								'a',
+								{ href: '/site/policies/linking-policy' },
+								'Linking Policy'
+							)
+						),
+						React.createElement(
+							'li',
+							null,
+							React.createElement(
+								'a',
+								{ href: '/site/policies/' },
+								'Site Policies'
+							)
+						),
+						React.createElement(
+							'li',
+							null,
+							React.createElement(
+								'a',
+								{ href: 'https://wildnet.tpwd.state.tx.us/' },
+								'Intranet'
+							)
+						)
+					)
+				),
+				React.createElement(
+					'div',
+					{ className: 'col m2' },
+					React.createElement(
+						'ul',
+						null,
+						React.createElement(
+							'li',
+							{ className: 'header' },
+							'Statewide Info'
+						),
+						React.createElement(
+							'li',
+							null,
+							React.createElement(
+								'a',
+								{ href: 'http://www.texas.gov/' },
+								'texas.gov'
+							)
+						),
+						React.createElement(
+							'li',
+							{ className: 'mobile' },
+							React.createElement(
+								'a',
+								{ href: 'http://www.governor.state.tx.us/homeland' },
+								'Homeland Security'
+							)
+						),
+						React.createElement(
+							'li',
+							{ className: 'mobile' },
+							React.createElement(
+								'a',
+								{ href: 'http://www2.tsl.state.tx.us/trail/' },
+								'TRAIL Archives'
+							)
+						),
+						React.createElement(
+							'li',
+							{ className: 'mobile' },
+							React.createElement(
+								'a',
+								{ href: 'http://www.texastransparency.org/' },
+								'Texas Transparency'
+							)
+						),
+						React.createElement(
+							'li',
+							{ className: 'mobile' },
+							React.createElement(
+								'a',
+								{ href: 'http://www.traveltex.com/' },
+								'Texas Tourism'
+							)
+						),
+						React.createElement(
+							'li',
+							{ className: 'mobile' },
+							React.createElement(
+								'a',
+								{ href: 'http://www.texas.gov/veterans' },
+								'Texas Veterans Portal'
+							)
+						)
+					)
+				),
+				React.createElement(
+					'div',
+					{ className: 'col m2' },
+					React.createElement(
+						'ul',
+						null,
+						React.createElement(
+							'li',
+							{ className: 'header' },
+							'Connect with TPWD'
+						),
+						React.createElement(
+							'li',
+							null,
+							React.createElement(
+								'a',
+								{ href: '/socialmedia/' },
+								'Social Media'
+							)
+						),
+						React.createElement(
+							'li',
+							{ className: 'mobile' },
+							React.createElement(
+								'a',
+								{ href: '/business/feedback/webcomment/' },
+								'Submit a Question'
+							)
+						),
+						React.createElement(
+							'li',
+							{ className: 'mobile' },
+							React.createElement(
+								'a',
+								{ href: '/site/openrecords' },
+								'Open Records'
+							)
+						),
+						React.createElement(
+							'li',
+							null,
+							React.createElement(
+								'a',
+								{ href: '/business/feedback/complaints/' },
+								'Complaint Process'
+							)
+						),
+						React.createElement(
+							'li',
+							{ className: 'mobile' },
+							React.createElement(
+								'a',
+								{ href: '/site/fraud/' },
+								'Report Fraud'
+							)
+						)
+					)
+				),
+				React.createElement(
+					'div',
+					{ className: 'col m2' },
+					React.createElement(
+						'ul',
+						null,
+						React.createElement(
+							'li',
+							null,
+							React.createElement(
+								'a',
+								{ href: 'https://service.govdelivery.com/service/multi_subscribe.html?code=TXPWD&origin=http://www.tpwd.state.tx.us/' },
+								React.createElement('i', { className: 'icon-email icon-large' }),
+								'Sign up for Email'
+							)
+						),
+						React.createElement(
+							'li',
+							null,
+							React.createElement(
+								'a',
+								{ href: 'http://www.facebook.com/texasparksandwildlife' },
+								React.createElement('i', { className: 'icon-facebook icon-large' }),
+								'Facebook'
+							)
+						),
+						React.createElement(
+							'li',
+							null,
+							React.createElement(
+								'a',
+								{ href: 'http://twitter.com/TPWDnews' },
+								React.createElement('i', { className: 'icon-twitter icon-large' }),
+								'Twitter'
+							)
+						),
+						React.createElement(
+							'li',
+							null,
+							React.createElement(
+								'a',
+								{ href: 'http://www.youtube.com/user/texasparkswildlife' },
+								React.createElement('i', { className: 'icon-youtube icon-large' }),
+								'YouTube'
+							)
+						)
+					)
+				)
+			)
+		);
+	}
+});
+
+},{"backbone":1,"react":163}],169:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
+var Backbone = require('backbone');
+window.$ = require('jquery');
+window.jQuery = $;
+
+module.exports = React.createClass({
     displayName: 'exports',
 
-    componentWillMount: function componentWillMount() {
+    componentDidMount: function componentDidMount() {
         $(document).ready(function () {
             $('.parallax').parallax();
+            $('.modal-trigger').leanModal();
         });
         // <div id='heroHeader'>
         // 	<h1 className="center brand-title"></h1>
@@ -35345,7 +35791,7 @@ module.exports = React.createClass({
                             React.createElement('br', null),
                             React.createElement(
                                 'h1',
-                                { className: 'header center brand-title' },
+                                { className: 'header center brand-title heroTitle' },
                                 'Campsite Reservation'
                             ),
                             React.createElement(
@@ -35353,8 +35799,8 @@ module.exports = React.createClass({
                                 { className: 'row center' },
                                 React.createElement(
                                     'a',
-                                    { href: '#park', id: 'searchParkButton', className: 'btn-large waves-effect' },
-                                    'Search'
+                                    { href: '#park', id: 'signupButton', className: 'btn-large waves-effect heroButton' },
+                                    'Explore'
                                 )
                             )
                         )
@@ -35388,12 +35834,12 @@ module.exports = React.createClass({
                                 React.createElement(
                                     'h5',
                                     { className: 'center' },
-                                    'Stay Together'
+                                    'Find a Park'
                                 ),
                                 React.createElement(
                                     'p',
                                     { className: 'light' },
-                                    'Kin-Connect is making it easier than ever to stay in touch with your family members!'
+                                    'Search through Texas\'s State Parks by either the avaliable activities or type of campsites avaliable.'
                                 )
                             )
                         ),
@@ -35415,12 +35861,12 @@ module.exports = React.createClass({
                                 React.createElement(
                                     'h5',
                                     { className: 'center' },
-                                    'Stay Up to Date'
+                                    'Book a campsite'
                                 ),
                                 React.createElement(
                                     'p',
                                     { className: 'light' },
-                                    'Kin-Connect allows your family to keep up with all of the upcoming family events! '
+                                    'Easily book a campsite for any state park. Ensure your spot at one of Texas\'s many wonders. '
                                 )
                             )
                         ),
@@ -35442,12 +35888,12 @@ module.exports = React.createClass({
                                 React.createElement(
                                     'h5',
                                     { className: 'center' },
-                                    'Stay Talking'
+                                    'Manage Reservations'
                                 ),
                                 React.createElement(
                                     'p',
                                     { className: 'light' },
-                                    'Kin-Connect lets you enter recipes into a family-wide cookbook, no longer with you be asking how to make grandma\'s apple\'s pie!'
+                                    'We make sure it is easy to change your reservations so you can get back into nature.'
                                 )
                             )
                         )
@@ -35456,16 +35902,7 @@ module.exports = React.createClass({
             ),
             React.createElement(
                 'div',
-                { id: 'index-banner' },
-                React.createElement(
-                    'div',
-                    { className: 'container' },
-                    React.createElement(
-                        'h1',
-                        { className: 'header center brand-title' },
-                        'Campsite Reservation'
-                    )
-                ),
+                { id: 'index-banner', className: 'parallax-container' },
                 React.createElement(
                     'div',
                     { id: 'enchanted' },
@@ -35479,9 +35916,27 @@ module.exports = React.createClass({
                     'div',
                     { className: 'container' },
                     React.createElement(
-                        'h1',
-                        { className: 'header center brand-title' },
-                        'Campsite Reservation'
+                        'div',
+                        { className: 'box-shadow--6dp col m8 offset-m2 reserveHeader' },
+                        React.createElement(
+                            'h4',
+                            { className: 'header center brand-title' },
+                            'Reservation Procedures'
+                        ),
+                        React.createElement(
+                            'div',
+                            { className: 'reserveText' },
+                            React.createElement(
+                                'p',
+                                null,
+                                'We recommend reservations for day and overnight facilities and some tours and activities. Popular sites book up months in advance; reserve those sites early.With one call, you can make reservations 11 months (333 days) in advance for multiple sites and parks (with no overlapping dates).'
+                            ),
+                            React.createElement(
+                                'p',
+                                null,
+                                'Make reservations at least one day prior to your arrival date. You can make reservations on the Web until 5 a.m. on the day of arrival. After that time, for arrival that day, call the park directly. If sites are available, make a reservation with a credit card (Discover, MasterCard, or Visa). We will charge your credit card for the first night\'s stay. Reservations made the day of arrival at the park are not refundable.'
+                            )
+                        )
                     )
                 ),
                 React.createElement(
@@ -35495,35 +35950,232 @@ module.exports = React.createClass({
 
 });
 
-},{"backbone":1,"react":163}],169:[function(require,module,exports){
+},{"backbone":1,"jquery":4,"react":163}],170:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
+var Backbone = require('backbone');
+var UserModel = require('../models/UserModel.js');
+
+module.exports = React.createClass({
+	displayName: 'exports',
+
+	getInitialState: function getInitialState() {
+		return {
+			error: null
+		};
+	},
+	render: function render() {
+		var errorElement = React.createElement(
+			'div',
+			{ className: 'red lighten-1' },
+			this.state.error
+		);
+		return React.createElement(
+			'div',
+			{ className: 'LoginComponent' },
+			React.createElement(
+				'div',
+				{ className: 'row' },
+				errorElement,
+				React.createElement(
+					'form',
+					{ className: 'col s12', onSubmit: this.onLogin },
+					React.createElement(
+						'div',
+						{ className: 'row' },
+						React.createElement(
+							'div',
+							{ className: 'row' },
+							React.createElement(
+								'div',
+								{ className: 'input-field col s12' },
+								React.createElement('input', { id: 'email', type: 'email', className: 'validate', ref: 'email' }),
+								React.createElement(
+									'label',
+									{ htmlFor: 'email' },
+									'Email'
+								)
+							)
+						),
+						React.createElement(
+							'div',
+							{ className: 'row' },
+							React.createElement(
+								'div',
+								{ className: 'input-field col s12' },
+								React.createElement('input', { id: 'password', type: 'password', className: 'validate', ref: 'password' }),
+								React.createElement(
+									'label',
+									{ htmlFor: 'password' },
+									'Password'
+								)
+							)
+						),
+						React.createElement(
+							'button',
+							{ type: 'submit', ref: 'button', className: 'btn-large waves-effect heroButton' },
+							'Sign-In'
+						)
+					)
+				)
+			)
+		);
+	},
+	onLogin: function onLogin(e) {
+		var _this = this;
+
+		e.preventDefault();
+		this.refs.button.disabled = true;
+		console.log(this.refs.password.value);
+		// var user = new Parse.User();
+		Parse.User.logIn(this.refs.email.value, this.refs.password.value, {
+			//routes user to home page when they successfully log in
+			success: function success(u) {
+				_this.props.router.navigate('', { trigger: true });
+			}, //gives user error message when they enter in no/wrong info
+			error: function error(u, _error) {
+				_this.setState({
+					error: _error.message
+				});
+				_this.refs.button.disabled = false;
+			}
+		});
+	}
+});
+
+},{"../models/UserModel.js":181,"backbone":1,"react":163}],171:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
 var Backbone = require('backbone');
 
 module.exports = React.createClass({
-	displayName: 'exports',
+    displayName: 'exports',
 
-	render: function render() {
-		return React.createElement(
-			'div',
-			{ className: 'nav-wrapper' },
-			React.createElement(
-				'div',
-				{ className: 'image-div' },
-				React.createElement(
-					'a',
-					{ href: '#' },
-					React.createElement('img', { className: 'logo', src: '../../images/tpwd-logo-large.gif' }),
-					React.createElement(
-						'span',
-						null,
-						'Texas Parks & WildLife'
-					)
-				)
-			)
-		);
-	}
+    componentWillMount: function componentWillMount() {
+        var _this = this;
+
+        this.props.router.on('route', function () {
+            _this.forceUpdate();
+        });
+        $(document).ready(function () {
+            $(".button-collapse").sideNav();
+            $(".dropdown-button").dropdown();
+        });
+    },
+    render: function render() {
+        var currentUser = Parse.User.current();
+        var allLinks = [];
+        React.createElement(
+            'ul',
+            { id: 'dropdown1', className: 'dropdown-content' },
+            React.createElement(
+                'li',
+                { key: 'signout' },
+                React.createElement(
+                    'a',
+                    { href: '', onClick: this.signOut },
+                    'Sign-Out'
+                )
+            ),
+            React.createElement(
+                'li',
+                null,
+                React.createElement(
+                    'a',
+                    { href: '#!' },
+                    'two'
+                )
+            ),
+            React.createElement('li', { className: 'divider' }),
+            React.createElement(
+                'li',
+                null,
+                React.createElement(
+                    'a',
+                    { href: '#!' },
+                    'three'
+                )
+            )
+        );
+        if (currentUser) {
+            allLinks.push(React.createElement(
+                'li',
+                null,
+                React.createElement(
+                    'a',
+                    { className: 'dropdown-button', href: '#!', 'data-activates': 'dropdown1' },
+                    currentUser.get('firstName'),
+                    React.createElement(
+                        'i',
+                        { className: 'material-icons right' },
+                        'arrow_drop_down'
+                    )
+                )
+            ));
+        } else {
+            allLinks.push(this.links('login', 'Login'));
+            allLinks.push(this.links('signup', 'Sign-Up'));
+        }
+        return React.createElement(
+            'div',
+            { className: 'nav-wrapper' },
+            React.createElement(
+                'div',
+                { className: 'image-div' },
+                React.createElement(
+                    'a',
+                    { href: '#' },
+                    React.createElement('img', { className: 'logo', src: '../../images/tpwd-logo-large.gif' }),
+                    React.createElement(
+                        'span',
+                        null,
+                        'Texas Parks & WildLife'
+                    )
+                )
+            ),
+            React.createElement(
+                'ul',
+                { id: 'nav-mobile', className: 'right hide-on-small-and-down' },
+                allLinks
+            ),
+            React.createElement(
+                'ul',
+                { className: 'side-nav', id: 'mobile' },
+                allLinks
+            )
+        );
+    },
+    links: function links(url, label) {
+        var currentUrl = Backbone.history.getFragment();
+        if (currentUrl === url) {
+            return React.createElement(
+                'li',
+                { className: 'active', key: url },
+                React.createElement(
+                    'a',
+                    { href: '#' + url },
+                    label
+                )
+            );
+        } else {
+            return React.createElement(
+                'li',
+                { key: url },
+                React.createElement(
+                    'a',
+                    { href: '#' + url },
+                    label
+                )
+            );
+        }
+    },
+    signOut: function signOut(e) {
+        e.preventDefault();
+        Parse.User.logOut();
+        this.props.router.navigate('', { trigger: true });
+    }
 });
 
 // <div className = 'user-dropdown'>
@@ -35540,7 +36192,7 @@ module.exports = React.createClass({
 //       </ul>
 //     </div>
 
-},{"backbone":1,"react":163}],170:[function(require,module,exports){
+},{"backbone":1,"react":163}],172:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -35570,7 +36222,7 @@ module.exports = React.createClass({
 	render: function render() {
 		return React.createElement(
 			'div',
-			{ id: 'parkDetail', className: 'col m8 offset-m1' },
+			{ id: 'parkDetail', className: 'col m8 offset-m1 box-shadow--9dp' },
 			React.createElement('img', { className: 'closeIcon', onClick: this.closePark, src: '../../images/ic_highlight_off_18pt_2x.png' }),
 			React.createElement(
 				'h3',
@@ -35594,7 +36246,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"../models/ParkModel.js":176,"backbone":1,"react":163}],171:[function(require,module,exports){
+},{"../models/ParkModel.js":179,"backbone":1,"react":163}],173:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -35604,6 +36256,8 @@ var ParkModel = require('../models/ParkModel.js');
 var CampsiteModel = require('../models/CampsiteModel.js');
 var ParkDetailsComponent = require('./ParkDetailsComponent.js');
 var StatusBarComponent = require('./StatusBarComponent.js');
+window.$ = require('jquery');
+window.jQuery = $;
 
 var markerList = [];
 var clickedMarkerList = [];
@@ -35637,6 +36291,9 @@ module.exports = React.createClass({
 			scrollwheel: false,
 			mapTypeId: google.maps.MapTypeId.TERRAIN
 		});
+		$(document).ready(function () {
+			$('.collapsible').collapsible();
+		});
 	},
 	render: function render() {
 		var _this2 = this;
@@ -35655,10 +36312,18 @@ module.exports = React.createClass({
 			React.createElement(
 				'div',
 				{ className: 'row' },
-				React.createElement(StatusBarComponent, { status: 'parkSelect' }),
 				React.createElement(
 					'div',
-					{ id: 'selectParkList', className: 'col m3' },
+					{ className: 'banner z-depth-2' },
+					React.createElement(
+						'h2',
+						{ className: 'center' },
+						'Park Selection'
+					)
+				),
+				React.createElement(
+					'div',
+					{ id: 'selectParkList', className: 'col m3 z-depth-3' },
 					React.createElement(
 						'ul',
 						{ className: 'collection with-header' },
@@ -35678,7 +36343,7 @@ module.exports = React.createClass({
 				this.state.parkSelected ? React.createElement(ParkDetailsComponent, { router: this.props.router, park: this.state.parkSelected, onClose: this.onParkClose }) : null,
 				React.createElement(
 					'div',
-					{ id: 'filterBox', className: 'col m8 offset-m1' },
+					{ id: 'filterBox', className: 'col m8 offset-m1 z-depth-3' },
 					React.createElement(
 						'ul',
 						{ id: 'filter', className: 'collapsible col m12', 'data-collapsible': 'accordion' },
@@ -35905,9 +36570,14 @@ module.exports = React.createClass({
 									),
 									React.createElement(
 										'button',
-										{ id: 'filterButton', className: 'btn  waves-effect ' },
+										{ className: 'btn  waves-effect filterButton' },
 										' Submit'
 									)
+								),
+								React.createElement(
+									'button',
+									{ className: 'btn  waves-effect filterButton', onClick: this.clearFilter },
+									' Clear Filters'
 								)
 							)
 						)
@@ -35950,8 +36620,19 @@ module.exports = React.createClass({
 		e.preventDefault();
 		console.log(this.refs.searchPark.value.toLowerCase());
 	},
-	createMarker: function createMarker(parksArray) {
+	clearFilter: function clearFilter() {
 		var _this4 = this;
+
+		var parkQuery = new Parse.Query(ParkModel);
+		parkQuery.equalTo('region', 'westTexas').find().then(function (park) {
+			_this4.setState({ parkList: park });
+			_this4.createMarker(_this4.state.parkList);
+		}, function (err) {
+			console.log(err);
+		});
+	},
+	createMarker: function createMarker(parksArray) {
+		var _this5 = this;
 
 		for (var i = 0; i < markerList.length; i++) {
 			markerList[i].setMap(null);
@@ -35963,19 +36644,19 @@ module.exports = React.createClass({
 			var myLatLng = { lat: park.get('lat'), lng: park.get('lng') };
 			var marker = new google.maps.Marker({
 				position: myLatLng,
-				map: _this4.map,
+				map: _this5.map,
 				// animation: google.maps.Animation.DROP,
 				title: park.get('name')
 			});
 			marker.addListener('click', function () {
-				_this4.setState({ parkSelected: park });
-				_this4.onParkSelect(park);
+				_this5.setState({ parkSelected: park });
+				_this5.onParkSelect(park);
 			});
 			markerList.push(marker);
 		});
 	},
 	onFilter: function onFilter(e) {
-		var _this5 = this;
+		var _this6 = this;
 
 		e.preventDefault();
 		var parkQuery = new Parse.Query(ParkModel);
@@ -35996,27 +36677,292 @@ module.exports = React.createClass({
 			for (var propertyName in campsByPark) {
 				parks.push(campsByPark[propertyName][0].get('parkId'));
 			}
-			_this5.setState({ parkList: parks });
-			_this5.createMarker(_this5.state.parkList);
+			_this6.setState({ parkList: parks });
+			_this6.createMarker(_this6.state.parkList);
 		});
 	}
 });
 
-},{"../models/CampsiteModel.js":175,"../models/ParkModel.js":176,"./ParkDetailsComponent.js":170,"./StatusBarComponent.js":173,"backbone":1,"backbone/node_modules/underscore":2,"react":163}],172:[function(require,module,exports){
+},{"../models/CampsiteModel.js":178,"../models/ParkModel.js":179,"./ParkDetailsComponent.js":172,"./StatusBarComponent.js":176,"backbone":1,"backbone/node_modules/underscore":2,"jquery":4,"react":163}],174:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
 var Backbone = require('backbone');
+var CampsiteModel = require('../models/CampsiteModel.js');
+var ReservationModel = require('../models/ReservationModel.js');
+var ParkModel = require('../models/ParkModel.js');
 
 module.exports = React.createClass({
 	displayName: 'exports',
 
+	getInitialState: function getInitialState() {
+		return {
+			reservations: []
+		};
+	},
+	componentWillMount: function componentWillMount() {
+		var _this = this;
+
+		console.log(Parse.User.current().id);
+		var reservationQuery = new Parse.Query(ReservationModel);
+		var targetUserModel = new Parse.User({ objectId: Parse.User.current().id });
+		reservationQuery.include(['campsiteId']);
+		reservationQuery.include(['campsiteId.parkId']);
+		reservationQuery.equalTo('userId', targetUserModel).find().then(function (reservations) {
+			_this.setState({ reservations: reservations });
+		});
+	},
 	render: function render() {
-		return React.createElement('div', null);
+		console.log(this.state.reservations);
+		var reservationsArray = this.state.reservations.map(function (reservation) {
+			return React.createElement(
+				'tr',
+				null,
+				React.createElement(
+					'td',
+					null,
+					reservation.id
+				),
+				React.createElement(
+					'td',
+					null,
+					reservation.get('campsiteId').get('parkId').get('name')
+				),
+				React.createElement(
+					'td',
+					null,
+					reservation.get('campsiteId').get('type')
+				),
+				React.createElement(
+					'td',
+					null,
+					reservation.get('startDate').toString().substring(4, 15),
+					' - ',
+					reservation.get('endDate').toString().substring(4, 15)
+				)
+			);
+		});
+		return React.createElement(
+			'div',
+			{ className: 'container' },
+			React.createElement(
+				'div',
+				{ className: 'banner z-depth-2' },
+				React.createElement(
+					'h2',
+					{ className: 'center' },
+					'PROFILE'
+				)
+			),
+			React.createElement(
+				'div',
+				{ className: 'row' },
+				React.createElement(
+					'div',
+					{ id: 'tango', className: 'col m12 z-depth-3' },
+					React.createElement(
+						'div',
+						{ id: 'tangoCash', className: 'col m12' },
+						React.createElement(
+							'h3',
+							null,
+							Parse.User.current().get('firstName'),
+							' ',
+							Parse.User.current().get('lastName')
+						),
+						React.createElement(
+							'table',
+							{ className: 'highlight' },
+							React.createElement(
+								'thead',
+								null,
+								React.createElement(
+									'tr',
+									null,
+									React.createElement(
+										'th',
+										{ 'data-field': 'reservationId' },
+										'Reservation Id'
+									),
+									React.createElement(
+										'th',
+										{ 'data-field': 'park' },
+										'Park'
+									),
+									React.createElement(
+										'th',
+										{ 'data-field': 'campsiteType' },
+										'Campsite Type'
+									),
+									React.createElement(
+										'th',
+										{ 'data-field': 'date' },
+										'Date'
+									)
+								)
+							),
+							React.createElement(
+								'tbody',
+								null,
+								reservationsArray
+							)
+						)
+					)
+				)
+			)
+		);
 	}
 });
 
-},{"backbone":1,"react":163}],173:[function(require,module,exports){
+},{"../models/CampsiteModel.js":178,"../models/ParkModel.js":179,"../models/ReservationModel.js":180,"backbone":1,"react":163}],175:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
+var Backbone = require('backbone');
+var UserModel = require('../models/UserModel.js');
+
+module.exports = React.createClass({
+    displayName: 'exports',
+
+    getInitialState: function getInitialState() {
+        return {
+            error: null
+        };
+    },
+    render: function render() {
+        var errorElement = React.createElement(
+            'div',
+            { className: 'red lighten-1' },
+            this.state.error
+        );
+        return React.createElement(
+            'div',
+            { className: 'SignUpComponent' },
+            React.createElement(
+                'div',
+                { className: 'row' },
+                errorElement,
+                React.createElement(
+                    'form',
+                    { className: 'col s12', onSubmit: this.signUp },
+                    React.createElement(
+                        'div',
+                        { className: 'row' },
+                        React.createElement(
+                            'div',
+                            { className: 'row' },
+                            React.createElement(
+                                'div',
+                                { className: 'input-field col s12' },
+                                React.createElement('input', { id: 'email', type: 'email', className: 'validate', ref: 'email' }),
+                                React.createElement(
+                                    'label',
+                                    { htmlFor: 'email' },
+                                    'Email'
+                                )
+                            )
+                        ),
+                        React.createElement(
+                            'div',
+                            { className: 'row' },
+                            React.createElement(
+                                'div',
+                                { className: 'input-field col s12' },
+                                React.createElement('input', { id: 'password', type: 'password', className: 'validate', ref: 'password' }),
+                                React.createElement(
+                                    'label',
+                                    { htmlFor: 'password' },
+                                    'Password'
+                                )
+                            )
+                        ),
+                        React.createElement(
+                            'div',
+                            { className: 'input-field col s6' },
+                            React.createElement('input', { id: 'firstName', type: 'text', className: 'validate', ref: 'firstName' }),
+                            React.createElement(
+                                'label',
+                                { htmlFor: 'firstName' },
+                                'First Name'
+                            )
+                        ),
+                        React.createElement(
+                            'div',
+                            { className: 'input-field col s6' },
+                            React.createElement('input', { id: 'lastName', type: 'text', className: 'validate', ref: 'lastName' }),
+                            React.createElement(
+                                'label',
+                                { htmlFor: 'lastName' },
+                                'Last Name'
+                            )
+                        ),
+                        React.createElement(
+                            'div',
+                            { className: 'row' },
+                            this.state.showFamilyCode ? React.createElement(
+                                'div',
+                                { className: 'input-field col s6' },
+                                React.createElement('input', { id: 'familyCode', type: 'text', ref: 'familyCode' }),
+                                React.createElement(
+                                    'label',
+                                    { htmlFor: 'familyCode' },
+                                    'Family Code '
+                                )
+                            ) : React.createElement(
+                                'div',
+                                { className: 'optional col s6' },
+                                'Already have a family code, then click here!',
+                                React.createElement(
+                                    'i',
+                                    { className: 'material-icons' },
+                                    'play_arrow'
+                                )
+                            ),
+                            React.createElement(
+                                'a',
+                                { className: 'btn-floating btn-large waves-effect waves-light', onClick: this.showFamily },
+                                React.createElement(
+                                    'i',
+                                    { className: 'material-icons' },
+                                    'add'
+                                )
+                            )
+                        ),
+                        React.createElement(
+                            'button',
+                            { type: 'submit', className: 'btn-large waves-effect col s6 heroButton' },
+                            'Sign-Up'
+                        )
+                    )
+                )
+            )
+        );
+    },
+    signUp: function signUp(e) {
+        var _this = this;
+
+        e.preventDefault();
+        var user = new Parse.User();
+        user.signUp({
+            firstName: this.refs.firstName.value,
+            lastName: this.refs.lastName.value,
+            username: this.refs.firstName.value + this.refs.lastName.value,
+            password: this.refs.password.value,
+            email: this.refs.email.value
+        }, {
+            success: function success(u) {
+                _this.props.router.navigate('', { trigger: true });
+            },
+            error: function error(u, _error) {
+                _this.setState({
+                    error: _error.message
+                });
+            }
+        });
+    }
+});
+
+},{"../models/UserModel.js":181,"backbone":1,"react":163}],176:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -36064,13 +37010,17 @@ module.exports = React.createClass({
 });
 React.createElement('div', { 'class': 'css-shapes-preview' });
 
-},{"backbone":1,"react":163}],174:[function(require,module,exports){
+},{"backbone":1,"react":163}],177:[function(require,module,exports){
 'use strict';
 var React = require('react');
 var ReactDOM = require('react-dom');
 var Backbone = require('backbone');
 window.$ = require('jquery');
 window.jQuery = $;
+$(document).ready(function () {
+	$('.parallax').parallax();
+	$('.modal-trigger').leanModal();
+});
 
 Parse.initialize("9sd2q0JxfBh6eWh1PVgYsW2wrFndlmUlT7tYa35d", "Palf0mZkw2r2fS53EDabTT3TIPXAxid86PfP4nZb");
 
@@ -36081,8 +37031,12 @@ var CampsiteSelectionComponent = require('./components/CampsiteSelectionComponen
 var ConfirmSelectionComponent = require('./components/ConfirmSelectionComponent.js');
 var CheckoutComponent = require('./components/CheckoutComponent.js');
 var ProfileComponent = require('./components/ProfileComponent.js');
+var LoginComponent = require('./components/LoginComponent.js');
+var SignupComponent = require('./components/SignupComponent.js');
+var FooterComponent = require('./components/FooterComponent.js');
 var main = document.getElementById('main');
 var nav = document.getElementById('nav');
+var footer = document.getElementById('footer');
 var Router = Backbone.Router.extend({
 	routes: {
 		'': 'home',
@@ -36090,7 +37044,9 @@ var Router = Backbone.Router.extend({
 		'campsite/:id': 'campsite',
 		'confirmSelection/:id': 'confirmSelection',
 		'checkout/:id': 'checkout',
-		'profile/:id': 'profile'
+		'profile': 'profile',
+		'login': 'login',
+		'signup': 'signup'
 	},
 	home: function home() {
 		ReactDOM.render(React.createElement(HomeComponent, null), main);
@@ -36109,36 +37065,50 @@ var Router = Backbone.Router.extend({
 	},
 	profile: function profile() {
 		ReactDOM.render(React.createElement(ProfileComponent, { router: r }), main);
+	},
+	login: function login() {
+		ReactDOM.render(React.createElement(LoginComponent, { router: r }), main);
+	},
+	signup: function signup() {
+		ReactDOM.render(React.createElement(SignupComponent, { router: r }), main);
 	}
 });
 
 var r = new Router();
 Backbone.history.start();
 
-ReactDOM.render(React.createElement(NavComponent, null), nav);
+ReactDOM.render(React.createElement(NavComponent, { router: r }), nav);
+ReactDOM.render(React.createElement(FooterComponent, { router: r }), footer);
 
-},{"./components/CampsiteSelectionComponent.js":165,"./components/CheckoutComponent.js":166,"./components/ConfirmSelectionComponent.js":167,"./components/HomeComponent.js":168,"./components/NavComponent.js":169,"./components/ParkSelectionComponent.js":171,"./components/ProfileComponent.js":172,"backbone":1,"jquery":4,"react":163,"react-dom":8}],175:[function(require,module,exports){
+},{"./components/CampsiteSelectionComponent.js":165,"./components/CheckoutComponent.js":166,"./components/ConfirmSelectionComponent.js":167,"./components/FooterComponent.js":168,"./components/HomeComponent.js":169,"./components/LoginComponent.js":170,"./components/NavComponent.js":171,"./components/ParkSelectionComponent.js":173,"./components/ProfileComponent.js":174,"./components/SignupComponent.js":175,"backbone":1,"jquery":4,"react":163,"react-dom":8}],178:[function(require,module,exports){
 'use strict';
 
 module.exports = Parse.Object.extend({
   className: 'Campsites'
 });
 
-},{}],176:[function(require,module,exports){
+},{}],179:[function(require,module,exports){
 'use strict';
 
 module.exports = Parse.Object.extend({
   className: 'Parks'
 });
 
-},{}],177:[function(require,module,exports){
+},{}],180:[function(require,module,exports){
 'use strict';
 
 module.exports = Parse.Object.extend({
   className: 'Reservations'
 });
 
-},{}]},{},[174])
+},{}],181:[function(require,module,exports){
+'use strict';
+
+module.exports = Parse.Object.extend({
+  className: 'User'
+});
+
+},{}]},{},[177])
 
 
 //# sourceMappingURL=bundle.js.map

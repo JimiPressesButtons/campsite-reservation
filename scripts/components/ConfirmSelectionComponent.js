@@ -13,7 +13,10 @@ module.exports = React.createClass({
 			campsiteType:null,
 			startDate: null,
 			endDate: null,
-			park: null
+			park: null,
+			parkLat:null,
+			parkLng:null,
+			email: null
 		};
 	},
 	componentWillMount:function(){
@@ -24,18 +27,25 @@ module.exports = React.createClass({
 		reservationQuery.include(['campsiteId.parkId']);
 		reservationQuery.get(this.props.reservationId).then(
 			(reservations)=>{
-				console.log(reservations)
-				console.log(reservations.get('campsiteId').id);
-				console.log(reservations.get('campsiteId').get('type'));
-				console.log(reservations.get('campsiteId').get('parkId').get('name'));
-				console.log(reservations.get('startDate'));
-				console.log(reservations.get('endDate'));
 				this.setState({park: reservations.get('campsiteId').get('parkId').get('name')});
+				this.setState({parkLat: reservations.get('campsiteId').get('parkId').get('lat')});
+				this.setState({parkLng: reservations.get('campsiteId').get('parkId').get('lng')});
 				this.setState({campsiteType: reservations.get('campsiteId').get('type')});
 				this.setState({startDate: reservations.get('startDate').toString().substring(0,15)});
 				this.setState({endDate: reservations.get('endDate').toString().substring(0,15)});
+				this.setState({email:Parse.User.current().get('email')});
+
 			 }
 		);
+	},
+	componentDidMount: function(){
+		var mapView = {lat:this.state.parkLat, lng: this.state.parkLng}
+		this.map = new google.maps.Map(this.refs.map, {
+			center: mapView,
+			zoom: 6,
+			scrollwheel: false,
+    		mapTypeId: google.maps.MapTypeId.TERRAIN
+		});
 	},
 	componentDidMount:function() {
 		// var campsiteQuery = new Parse.Query(CampsiteModel);
@@ -55,19 +65,22 @@ module.exports = React.createClass({
 					// </div>
 		return(
 			<div className='container'>
+				<div className='banner z-depth-2'>
+					<h2 className='center'>Confirm Reservation</h2>
+				</div>	
 				<div className='row'>
-					<StatusBarComponent status='confirmSelection'/>
 
-					<div id='tango'className ='col m8 offset-m2'>
-						<div id='tangoCash'className='col m12'>
+					<div id='tango'className ='col m12 z-depth-3'>
+						<div id='tangoCash'className='col m6'>
 							<h3>{this.state.park}</h3>
 							<h4>{this.state.campsiteType}</h4>
 							<h5>{this.state.startDate}</h5>
 							<h5>{this.state.endDate}</h5>
+							<h5>{this.state.email}</h5>
 							<button className='confirmationButton btn waves-effect' onClick={this.onConfirm}>Confirm</button>
-							<button className='confirmationButton btn waves-effect' onClick={this.onCancel}>Cancel</button>
-							
+							<button className='confirmationButton btn waves-effect' onClick={this.onCancel}>Cancel</button>	
 						</div>
+						<div ref='map'id='map'className ='col m5 offset-m1'></div>
 					</div>		
 				</div>
 			</div>

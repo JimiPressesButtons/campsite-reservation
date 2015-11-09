@@ -3,8 +3,10 @@ var Backbone = require('backbone');
 var _ = require('backbone/node_modules/underscore');
 var ParkModel = require('../models/ParkModel.js');
 var CampsiteModel = require('../models/CampsiteModel.js');
-var ParkDetailsComponent =require('./ParkDetailsComponent.js');
+var ParkDetailsComponent = require('./ParkDetailsComponent.js');
 var StatusBarComponent = require('./StatusBarComponent.js');
+window.$ = require('jquery');
+window.jQuery = $;
 
 var markerList = [];
 var clickedMarkerList = [];
@@ -37,6 +39,9 @@ module.exports = React.createClass({
 			scrollwheel: false,
     		mapTypeId: google.maps.MapTypeId.TERRAIN
 		});
+		$(document).ready(function() {
+			$('.collapsible').collapsible();
+		})
 	},
 	render: function(){
 		var parks = this.state.parkList.map(
@@ -50,8 +55,10 @@ module.exports = React.createClass({
 		return(
 			<div className='container'>
 				<div className='row'>
-					<StatusBarComponent status='parkSelect'/>
-					<div id='selectParkList' className ='col m3'>
+					<div className='banner z-depth-2'>
+						<h2 className='center'>Park Selection</h2>
+					</div>			
+					<div id='selectParkList' className ='col m3 z-depth-3'>
 						<ul className='collection with-header'>
 							<li className='collection-header listItem'><h5>State Parks</h5></li>
 							{parks}
@@ -60,7 +67,7 @@ module.exports = React.createClass({
 					<div ref='map'id='map'className ='col m8 offset-m1'></div>
 
 					{this.state.parkSelected ? <ParkDetailsComponent router = {this.props.router} park={this.state.parkSelected} onClose={this.onParkClose}/> : null}
-					<div id='filterBox'className='col m8 offset-m1'>
+					<div id='filterBox'className='col m8 offset-m1 z-depth-3'>
 						<ul id='filter'className='collapsible col m12' data-collapsible='accordion'>
 							<li>
 							<div className='collapsible-header'><h5>Filter</h5></div>
@@ -110,8 +117,9 @@ module.exports = React.createClass({
 									<option ref='screenShelter' value='screenShelter'>Screened Shelter</option>
 									<option ref='backCountry' value='backCountry'>Backcountry</option>
 								</select>		
-							<button id='filterButton'className="btn  waves-effect "> Submit</button> 
+							<button className="btn  waves-effect filterButton"> Submit</button> 	
 						</form>	 
+							<button className="btn  waves-effect filterButton" onClick={this.clearFilter}> Clear Filters</button> 
 							</div> 
 							</li> 
 						</ul>
@@ -151,6 +159,18 @@ module.exports = React.createClass({
 	onSearchPark: function(e){
 		e.preventDefault();
 		console.log((this.refs.searchPark.value).toLowerCase());
+	},
+	clearFilter:function(){
+		var parkQuery = new Parse.Query(ParkModel);
+		parkQuery.equalTo('region','westTexas').find().then(
+			(park) =>{
+				this.setState({parkList:park});
+				this.createMarker(this.state.parkList);
+			},
+			(err) =>{
+				console.log(err);
+			}
+		);
 	},
 	createMarker: function(parksArray){
 		for(let i=0;i<markerList.length;i++){
@@ -200,6 +220,5 @@ module.exports = React.createClass({
 				this.createMarker(this.state.parkList);
 			}
 		);
-
 	}		
 });
