@@ -23,7 +23,6 @@ module.exports = React.createClass({
 		);
 	},
 	render:function(){
-		console.log(this.state.reservations);
 		var reservationsArray = this.state.reservations.map(
 			(reservation)=>{
 				return(

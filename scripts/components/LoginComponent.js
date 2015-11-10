@@ -1,6 +1,6 @@
 var React= require('react');
 var Backbone = require('backbone');
-var UserModel = require('../models/UserModel.js');
+
 
 module.exports = React.createClass({
 	getInitialState: function(){
@@ -46,7 +46,7 @@ module.exports = React.createClass({
 			{
 				//routes user to home page when they successfully log in
 				success: (u) => {
-					this.props.router.navigate('', {trigger: true})
+					this.props.router.navigate('profile', {trigger: true})
 				},//gives user error message when they enter in no/wrong info
 				error: (u, error) => {
 					this.setState({

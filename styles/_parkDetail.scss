@@ -1,11 +1,11 @@
 @import 'variables';
 
 #parkDetail{
-
 	padding: 1em;
 	background-color:#FFF;
 	border: $border;
 	border-top:none;
+	overflow: hidden;
 	.closeIcon{
 		float: right;
 		font-size: 1em;

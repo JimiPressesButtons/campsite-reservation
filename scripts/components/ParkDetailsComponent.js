@@ -22,11 +22,11 @@ module.exports = React.createClass({
 	// },
 	render: function(){
 		return(
-			<div id= 'parkDetail'className ='col m8 offset-m1 box-shadow--9dp'> 
+			<div id= 'parkDetail'> 
 				<img className='closeIcon' onClick={this.closePark} src='../../images/ic_highlight_off_18pt_2x.png' />
 				<h3>{this.props.park.get('name')}</h3>
+				<p>{this.props.park.get('description')}</p>
 				<button className="btn  waves-effect" onClick={this.selectPark}>Select</button>
-
 			</div>
 		);
 	},

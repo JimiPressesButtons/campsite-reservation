@@ -55,19 +55,23 @@ module.exports = React.createClass({
 		return(
 			<div className='container'>
 				<div className='row'>
-					<div className='banner z-depth-2'>
+					<div className='banner'>
 						<h2 className='center'>Park Selection</h2>
 					</div>			
-					<div id='selectParkList' className ='col m3 z-depth-3'>
+					<div id='selectParkList' className ='col m3'>
 						<ul className='collection with-header'>
 							<li className='collection-header listItem'><h5>State Parks</h5></li>
 							{parks}
 						</ul>
 					</div>
-					<div ref='map'id='map'className ='col m8 offset-m1'></div>
-
+				<div className ='col m8 offset-m1'>
+				<div className='row map-row'>
+				<div className ='col m12'>
+					<div ref='map'id='map'></div>
+					</div>
+					</div>
 					{this.state.parkSelected ? <ParkDetailsComponent router = {this.props.router} park={this.state.parkSelected} onClose={this.onParkClose}/> : null}
-					<div id='filterBox'className='col m8 offset-m1 z-depth-3'>
+					<div id='filterBox'>
 						<ul id='filter'className='collapsible col m12' data-collapsible='accordion'>
 							<li>
 							<div className='collapsible-header'><h5>Filter</h5></div>
@@ -124,6 +128,7 @@ module.exports = React.createClass({
 							</li> 
 						</ul>
 					</div>
+				</div>
 				</div>
 			</div>
 		);

@@ -1,33 +1,37 @@
 var React = require('react');
 var Backbone = require('backbone');
+window.$ = require('jquery');
+window.jQuery = $;
 
 module.exports = React.createClass({
 	componentWillMount: function(){
         this.props.router.on('route', () => {
             this.forceUpdate();
         });
+
+    },
+    componentDidMount:function() {
         $(document).ready(function(){
             $(".button-collapse").sideNav();
             $(".dropdown-button").dropdown();
-        });
-
+        });  
     },
 	render:function(){
 		var currentUser = Parse.User.current();
-        var allLinks = [];
+        var profileLink = null;
         <ul id="dropdown1" className="dropdown-content">
-			<li key="signout"><a href='' onClick={this.signOut}>Sign-Out</a></li>
+			
 			<li><a href="#!">two</a></li>
 			<li className="divider"></li>
 			<li><a href="#!">three</a></li>
 		</ul>
-        if(currentUser){
-            allLinks.push(<li><a className="dropdown-button" href="#!" data-activates="dropdown1">{currentUser.get('firstName')}<i className="material-icons right">arrow_drop_down</i></a></li>);
+        // if(currentUser){
              
-        }else{
-            allLinks.push(this.links('login', 'Login'));
-            allLinks.push(this.links('signup', 'Sign-Up'));
-        }
+        // }else{
+        //     var allLinks =[];
+        //     allLinks.push(this.links('login', 'Login'));
+        //     allLinks.push(this.links('signup', 'Sign-Up'));
+        // }
 		return(
 			<div className = 'nav-wrapper'>
 				<div className = 'image-div'>
@@ -36,11 +40,12 @@ module.exports = React.createClass({
 						<span>Texas Parks & WildLife</span>
 					</a>
 				</div>
-				<ul id="nav-mobile" className="right hide-on-small-and-down">
-                        {allLinks}
-                    </ul>
-                    <ul className="side-nav" id="mobile">
-                        {allLinks}
+				<ul className="right hide-on-med-and-down">
+                    <li><a className="dropdown-button" href="#!" data-activates="dropdown1">{Parse.User.current().get('firstName')}<i className="material-icons right">arrow_drop_down</i></a></li>
+                </ul>
+                 <ul id="dropdown1" className="dropdown-content">
+                    <li key="signout"><a href='#profile' >My Reservations</a></li>
+                    <li key="signout"><a href='' onClick={this.signOut}>Sign-Out</a></li>
                 </ul>
 			</div>
 		);

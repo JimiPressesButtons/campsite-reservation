@@ -4,6 +4,8 @@ var StatusBarComponent = require('./StatusBarComponent.js');
 var CampsiteModel = require('../models/CampsiteModel.js');
 var ReservationModel = require('../models/ReservationModel.js');
 var ParkModel = require('../models/ParkModel.js');
+window.$ = require('jquery');
+window.jQuery = $;
 
 
 module.exports = React.createClass({
@@ -16,7 +18,8 @@ module.exports = React.createClass({
 			park: null,
 			parkLat:null,
 			parkLng:null,
-			email: null
+			email: null,
+			map: null
 		};
 	},
 	componentWillMount:function(){
@@ -34,24 +37,29 @@ module.exports = React.createClass({
 				this.setState({startDate: reservations.get('startDate').toString().substring(0,15)});
 				this.setState({endDate: reservations.get('endDate').toString().substring(0,15)});
 				this.setState({email:Parse.User.current().get('email')});
-
+				console.log(this.state.parkLng);
 			 }
 		);
+		
 	},
 	componentDidMount: function(){
-		var mapView = {lat:this.state.parkLat, lng: this.state.parkLng}
+		var mapView = {lat:(this.state.parkLat), lng: (this.state.parkLng)};
+		var texas = {lat:31.000, lng: -102.500};
 		this.map = new google.maps.Map(this.refs.map, {
-			center: mapView,
+			center: texas,
 			zoom: 6,
 			scrollwheel: false,
     		mapTypeId: google.maps.MapTypeId.TERRAIN
 		});
 	},
-	componentDidMount:function() {
-		// var campsiteQuery = new Parse.Query(CampsiteModel);
-		// var targetModel = new CampsiteModel({objectId:this.state.campsite});
-	},
 	render:function(){
+		let myLatLng = {lat: this.state.parkLat, lng: this.state.parkLng};
+		let marker = new google.maps.Marker({
+					position: myLatLng,
+					map: this.map,
+					animation: google.maps.Animation.BOUNCE,
+					title: this.state.park
+				});
 			var reservationList = this.state.reservationList.map(
 			(reservation)=>{
 				let boundItemClick = this.onCampsiteSelect.bind(this, campsite);
@@ -60,6 +68,7 @@ module.exports = React.createClass({
 				);
 			}
 		);
+
 					// 		<div id='selectList' className ='col m3'>
 					// 	<ul>{this.state.reservationList}</ul>
 					// </div>
@@ -80,7 +89,7 @@ module.exports = React.createClass({
 							<button className='confirmationButton btn waves-effect' onClick={this.onConfirm}>Confirm</button>
 							<button className='confirmationButton btn waves-effect' onClick={this.onCancel}>Cancel</button>	
 						</div>
-						<div ref='map'id='map'className ='col m5 offset-m1'></div>
+						<div ref='map'id='mapBro'className ='col m5 offset-m1'></div>
 					</div>		
 				</div>
 			</div>

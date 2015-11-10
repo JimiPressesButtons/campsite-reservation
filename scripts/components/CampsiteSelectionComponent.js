@@ -51,10 +51,10 @@ module.exports = React.createClass({
 		return(
 			<div className='container'>				
 				<div className='row'>
-					<div className='banner z-depth-2'>
+					<div className='banner '>
 						<h2 className='center'>Campsite Type Selection</h2>
 					</div>	
-					<div id='campSelectList' className ='col m3 z-depth-3'>
+					<div id='campSelectList' className ='col m3'>
 						<ul className='collection with-header'> 
 							<li className='collection-header listCampType'><h5>Campsite Type</h5></li>
 							{campsites} 
