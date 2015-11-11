@@ -34911,13 +34911,38 @@ module.exports = require('./lib/React');
 },{"./lib/React":32}],164:[function(require,module,exports){
 'use strict';
 
+module.exports = function (abbrivation) {
+	if (abbrivation === 'wtr') {
+		return 'Water';
+	} else if (abbrivation === 'wtr,elec') {
+		return 'Water and Electricity';
+	} else if (abbrivation === 'wtr,elec,sewer') {
+		return 'Water, Electricity, and Sewer';
+	} else if (abbrivation === 'wtr,elec50,sewer') {
+		return 'Water, Electricity 50 amp, and Sewer';
+	} else if (abbrivation === 'tent') {
+		return 'Tent';
+	} else if (abbrivation === 'primitive (hike in)') {
+		return 'Primitive (hike in';
+	} else if (abbrivation === 'primitive') {
+		return 'Primitive';
+	} else if (abbrivation === 'backCountry') {
+		return 'Back Country';
+	} else {
+		return 'unknown';
+	}
+};
+
+},{}],165:[function(require,module,exports){
+'use strict';
+
 var React = require('react');
 var Backbone = require('backbone');
 var _ = require('backbone/node_modules/underscore');
 var CampsiteModel = require('../models/CampsiteModel.js');
 var ReservationModel = require('../models/ReservationModel.js');
 var ParkModel = require('../models/ParkModel.js');
-
+var amenitiesConversion = require('../amenitiesConversion.js');
 module.exports = React.createClass({
 	displayName: 'exports',
 
@@ -34938,7 +34963,12 @@ module.exports = React.createClass({
 			React.createElement(
 				'h3',
 				null,
-				this.props.campsiteType
+				amenitiesConversion(this.props.campsiteType)
+			),
+			React.createElement(
+				'p',
+				null,
+				this.props.campsiteDescription
 			),
 			React.createElement(
 				'button',
@@ -35020,7 +35050,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"../models/CampsiteModel.js":178,"../models/ParkModel.js":179,"../models/ReservationModel.js":180,"backbone":1,"backbone/node_modules/underscore":2,"react":163}],165:[function(require,module,exports){
+},{"../amenitiesConversion.js":164,"../models/CampsiteModel.js":179,"../models/ParkModel.js":180,"../models/ReservationModel.js":181,"backbone":1,"backbone/node_modules/underscore":2,"react":163}],166:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -35032,6 +35062,7 @@ var StatusBarComponent = require('./StatusBarComponent.js');
 var CampsiteDetailsComponent = require('./CampsiteDetailsComponent.js');
 var CampsiteModel = require('../models/CampsiteModel.js');
 var ParkModel = require('../models/ParkModel.js');
+var amenitiesConversion = require('../amenitiesConversion.js');
 
 var startDate = null;
 var endDate = null;
@@ -35044,6 +35075,7 @@ module.exports = React.createClass({
 			campsites: [],
 			campsiteSelected: null,
 			startDate: null,
+			campsiteDescription: null,
 			endDate: null
 		};
 	},
@@ -35064,6 +35096,12 @@ module.exports = React.createClass({
 		}, function (err) {
 			console.log(err);
 		});
+		// campsitesQuery.equalTo('type',this.props.campsiteType).find().then(
+		// 	(campsite)=>{
+		// 		console.log(campsite);
+		// 		this.setState({campsiteDescription:campsite[0].get('description')});
+		// 	}
+		// )
 	},
 	render: function render() {
 		var _this2 = this;
@@ -35073,8 +35111,12 @@ module.exports = React.createClass({
 			return React.createElement(
 				'li',
 				{ onClick: boundItemClick, className: 'collection-item listCampType' },
-				campsite
+				amenitiesConversion(campsite)
 			);
+		});
+		var campsitesQuery = new Parse.Query(CampsiteModel);
+		campsitesQuery.equalTo('type', this.state.campsiteSelected).find().then(function (campsite) {
+			_this2.setState({ campsiteDescription: campsite[0].get('description') });
 		});
 		return React.createElement(
 			'div',
@@ -35146,6 +35188,7 @@ module.exports = React.createClass({
 					router: this.props.router,
 					parkId: this.props.parkId,
 					campsiteType: this.state.campsiteSelected,
+					campsiteDescription: this.state.campsiteDescription,
 					onClose: this.onCampsiteClose,
 					startDate: this.state.startDate,
 					endDate: this.state.endDate
@@ -35162,13 +35205,14 @@ module.exports = React.createClass({
 	},
 	onCampsiteSelect: function onCampsiteSelect(u) {
 		this.setState({ campsiteSelected: u });
+		console.log(u);
 	},
 	onCampsiteClose: function onCampsiteClose() {
 		this.setState({ campsiteSelected: null });
 	}
 });
 
-},{"../../node_modules/moment-range/dist/moment-range.min.js":5,"../../node_modules/moment/min/moment.min.js":6,"../models/CampsiteModel.js":178,"../models/ParkModel.js":179,"./CampsiteDetailsComponent.js":164,"./StatusBarComponent.js":176,"backbone":1,"backbone/node_modules/underscore":2,"react":163}],166:[function(require,module,exports){
+},{"../../node_modules/moment-range/dist/moment-range.min.js":5,"../../node_modules/moment/min/moment.min.js":6,"../amenitiesConversion.js":164,"../models/CampsiteModel.js":179,"../models/ParkModel.js":180,"./CampsiteDetailsComponent.js":165,"./StatusBarComponent.js":177,"backbone":1,"backbone/node_modules/underscore":2,"react":163}],167:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -35283,7 +35327,7 @@ module.exports = React.createClass({
 
 // NZCzkWMr0J
 
-},{"./StatusBarComponent.js":176,"backbone":1,"react":163}],167:[function(require,module,exports){
+},{"./StatusBarComponent.js":177,"backbone":1,"react":163}],168:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -35432,7 +35476,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"../models/CampsiteModel.js":178,"../models/ParkModel.js":179,"../models/ReservationModel.js":180,"./StatusBarComponent.js":176,"backbone":1,"jquery":4,"react":163}],168:[function(require,module,exports){
+},{"../models/CampsiteModel.js":179,"../models/ParkModel.js":180,"../models/ReservationModel.js":181,"./StatusBarComponent.js":177,"backbone":1,"jquery":4,"react":163}],169:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -35836,7 +35880,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"backbone":1,"react":163}],169:[function(require,module,exports){
+},{"backbone":1,"react":163}],170:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -36035,7 +36079,7 @@ module.exports = React.createClass({
 
 });
 
-},{"backbone":1,"jquery":4,"react":163}],170:[function(require,module,exports){
+},{"backbone":1,"jquery":4,"react":163}],171:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -36128,7 +36172,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"backbone":1,"react":163}],171:[function(require,module,exports){
+},{"backbone":1,"react":163}],172:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -36289,7 +36333,7 @@ module.exports = React.createClass({
 //       </ul>
 //     </div>
 
-},{"backbone":1,"jquery":4,"react":163}],172:[function(require,module,exports){
+},{"backbone":1,"jquery":4,"react":163}],173:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -36348,7 +36392,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"../models/ParkModel.js":179,"backbone":1,"react":163}],173:[function(require,module,exports){
+},{"../models/ParkModel.js":180,"backbone":1,"react":163}],174:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -36797,7 +36841,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"../models/CampsiteModel.js":178,"../models/ParkModel.js":179,"./ParkDetailsComponent.js":172,"./StatusBarComponent.js":176,"backbone":1,"backbone/node_modules/underscore":2,"jquery":4,"react":163}],174:[function(require,module,exports){
+},{"../models/CampsiteModel.js":179,"../models/ParkModel.js":180,"./ParkDetailsComponent.js":173,"./StatusBarComponent.js":177,"backbone":1,"backbone/node_modules/underscore":2,"jquery":4,"react":163}],175:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -36927,7 +36971,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"../models/CampsiteModel.js":178,"../models/ParkModel.js":179,"../models/ReservationModel.js":180,"backbone":1,"react":163}],175:[function(require,module,exports){
+},{"../models/CampsiteModel.js":179,"../models/ParkModel.js":180,"../models/ReservationModel.js":181,"backbone":1,"react":163}],176:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -37075,7 +37119,7 @@ module.exports = React.createClass({
     }
 });
 
-},{"../models/UserModel.js":181,"backbone":1,"react":163}],176:[function(require,module,exports){
+},{"../models/UserModel.js":182,"backbone":1,"react":163}],177:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -37123,7 +37167,7 @@ module.exports = React.createClass({
 });
 React.createElement('div', { 'class': 'css-shapes-preview' });
 
-},{"backbone":1,"react":163}],177:[function(require,module,exports){
+},{"backbone":1,"react":163}],178:[function(require,module,exports){
 'use strict';
 var React = require('react');
 var ReactDOM = require('react-dom');
@@ -37193,35 +37237,35 @@ Backbone.history.start();
 ReactDOM.render(React.createElement(NavComponent, { router: r }), nav);
 ReactDOM.render(React.createElement(FooterComponent, { router: r }), footer);
 
-},{"./components/CampsiteSelectionComponent.js":165,"./components/CheckoutComponent.js":166,"./components/ConfirmSelectionComponent.js":167,"./components/FooterComponent.js":168,"./components/HomeComponent.js":169,"./components/LoginComponent.js":170,"./components/NavComponent.js":171,"./components/ParkSelectionComponent.js":173,"./components/ProfileComponent.js":174,"./components/SignupComponent.js":175,"backbone":1,"jquery":4,"react":163,"react-dom":8}],178:[function(require,module,exports){
+},{"./components/CampsiteSelectionComponent.js":166,"./components/CheckoutComponent.js":167,"./components/ConfirmSelectionComponent.js":168,"./components/FooterComponent.js":169,"./components/HomeComponent.js":170,"./components/LoginComponent.js":171,"./components/NavComponent.js":172,"./components/ParkSelectionComponent.js":174,"./components/ProfileComponent.js":175,"./components/SignupComponent.js":176,"backbone":1,"jquery":4,"react":163,"react-dom":8}],179:[function(require,module,exports){
 'use strict';
 
 module.exports = Parse.Object.extend({
   className: 'Campsites'
 });
 
-},{}],179:[function(require,module,exports){
+},{}],180:[function(require,module,exports){
 'use strict';
 
 module.exports = Parse.Object.extend({
   className: 'Parks'
 });
 
-},{}],180:[function(require,module,exports){
+},{}],181:[function(require,module,exports){
 'use strict';
 
 module.exports = Parse.Object.extend({
   className: 'Reservations'
 });
 
-},{}],181:[function(require,module,exports){
+},{}],182:[function(require,module,exports){
 'use strict';
 
 module.exports = Parse.Object.extend({
   className: 'User'
 });
 
-},{}]},{},[177])
+},{}]},{},[178])
 
 
 //# sourceMappingURL=bundle.js.map

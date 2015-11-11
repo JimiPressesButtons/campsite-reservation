@@ -4,7 +4,7 @@ var _ = require('backbone/node_modules/underscore');
 var CampsiteModel = require('../models/CampsiteModel.js');
 var ReservationModel = require('../models/ReservationModel.js');
 var ParkModel = require('../models/ParkModel.js');
-
+var amenitiesConversion = require ('../amenitiesConversion.js');
 module.exports= React.createClass({
 	getInitialState: function(){
 		return{
@@ -19,7 +19,8 @@ module.exports= React.createClass({
 		return(
 			<div id= 'campsiteDetail'className ='col m7 offset-m1'> 
 				<img className='closeIcon' onClick={this.closePark} src='../../images/ic_highlight_off_18pt_2x.png' />
-				<h3>{this.props.campsiteType}</h3>
+				<h3>{amenitiesConversion(this.props.campsiteType)}</h3>
+				<p>{this.props.campsiteDescription}</p>
 				<button id='campsiteSelectButton'className="btn  waves-effect"onClick={this.selectCampsite}>Select</button>
 
 			</div>

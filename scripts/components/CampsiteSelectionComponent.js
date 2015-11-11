@@ -7,6 +7,7 @@ var StatusBarComponent = require('./StatusBarComponent.js');
 var CampsiteDetailsComponent = require('./CampsiteDetailsComponent.js');
 var CampsiteModel = require('../models/CampsiteModel.js');
 var ParkModel = require('../models/ParkModel.js');
+var amenitiesConversion = require ('../amenitiesConversion.js');
 
 var startDate = null;
 var endDate = null;
@@ -17,6 +18,7 @@ module.exports = React.createClass({
 			campsites:[],
 			campsiteSelected:null,
 			startDate: null,
+			campsiteDescription: null,
 			endDate: null
 		};
 	},
@@ -38,16 +40,28 @@ module.exports = React.createClass({
             	console.log(err);
         	}
 		);
+		// campsitesQuery.equalTo('type',this.props.campsiteType).find().then(
+		// 	(campsite)=>{
+		// 		console.log(campsite);
+		// 		this.setState({campsiteDescription:campsite[0].get('description')});
+		// 	}
+		// )
 	},
 	render: function(){
 		var campsites = this.state.campsites.map(
 			(campsite)=>{
 				let boundItemClick = this.onCampsiteSelect.bind(this, campsite);
 				return(
-					<li onClick={boundItemClick} className="collection-item listCampType" >{campsite}</li> 
+					<li onClick={boundItemClick} className="collection-item listCampType" >{amenitiesConversion(campsite)}</li> 
 				);
 			}
 		);
+		var campsitesQuery = new Parse.Query(CampsiteModel);
+		campsitesQuery.equalTo('type',this.state.campsiteSelected).find().then(
+			(campsite)=>{
+				this.setState({campsiteDescription:campsite[0].get('description')});
+			}
+		)
 		return(
 			<div className='container'>				
 				<div className='row'>
@@ -77,6 +91,7 @@ module.exports = React.createClass({
 						router = {this.props.router} 
 						parkId={this.props.parkId}
 						campsiteType={this.state.campsiteSelected} 
+						campsiteDescription = {this.state.campsiteDescription}
 						onClose={this.onCampsiteClose}
 						startDate = {this.state.startDate}
 						endDate = {this.state.endDate}
@@ -94,6 +109,7 @@ module.exports = React.createClass({
 	},
     onCampsiteSelect:function(u){
 		this.setState({campsiteSelected:u});
+		console.log(u);
     },
     onCampsiteClose:function(){
 		this.setState({campsiteSelected: null});
