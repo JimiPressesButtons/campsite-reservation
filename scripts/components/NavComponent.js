@@ -18,22 +18,25 @@ module.exports = React.createClass({
     },
 	render:function(){
 		var currentUser = Parse.User.current();
-        var profileLink = null;
+        var link =[];
+        var dropDownTitle = null;
         <ul id="dropdown1" className="dropdown-content">
 			
 			<li><a href="#!">two</a></li>
 			<li className="divider"></li>
 			<li><a href="#!">three</a></li>
 		</ul>
-        // if(currentUser){
-             
-        // }else{
-        //     var allLinks =[];
-        //     allLinks.push(this.links('login', 'Login'));
-        //     allLinks.push(this.links('signup', 'Sign-Up'));
-        // }
+        if(currentUser){
+            link.push(<li key="signout"><a href='#profile' >Reservations</a></li>);
+            link.push(<li key="signout1"><a href='' onClick={this.signOut}>Sign-Out</a></li>);
+        }else{
+            console.log('NO USER');
+            link.push(<li key="signout"><a href='#signup' >New User</a></li>);
+            link.push(<li key="signout1"><a href='#login' onClick={this.signOut}>Previous User</a></li>);
+        }
 		return(
 			<div className = 'nav-wrapper'>
+            <div id='navBar'>
 				<div className = 'image-div'>
 					<a href = '#'>
 						<img className ='logo' src='../../images/tpwd-logo-large.gif' />
@@ -41,13 +44,13 @@ module.exports = React.createClass({
 					</a>
 				</div>
 				<ul className="right hide-on-med-and-down">
-                    <li><a className="dropdown-button" href="#!" data-activates="dropdown1">{Parse.User.current().get('firstName')}<i className="material-icons right">arrow_drop_down</i></a></li>
+                    <li id='dropdownNavButton'><a className="dropdown-button" href="#!" data-activates="dropdown1">{(currentUser?Parse.User.current().get('firstName'):'Login')}<i className="material-icons right">arrow_drop_down</i></a></li>
                 </ul>
                  <ul id="dropdown1" className="dropdown-content">
-                    <li key="signout"><a href='#profile' >My Reservations</a></li>
-                    <li key="signout"><a href='' onClick={this.signOut}>Sign-Out</a></li>
+                    {link}
                 </ul>
 			</div>
+            </div>
 		);
 	},
 	links: function(url, label) {

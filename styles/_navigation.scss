@@ -1,12 +1,12 @@
 @import 'variables';
 
-nav .nav-wrapper{
+#navBar{
 	padding:1em;
 	background-color: $baseTone;
 	color: white;
-	overflow:hidden;
+	// overflow:hidden;
 	display:block;
-	height: auto;
+	height: 6.5em;
 	.image-div{
 		float: left;
 		height: 4.5em;
@@ -24,8 +24,11 @@ nav .nav-wrapper{
 			vertical-align: middle;
 		}
 	}
+	#dropdownNavButton{
+		width: 9em;
+	}
 	#dropdown1{
-		margin-top:1em;
+		width :100%;
 	}
 	.heroButton{
 		float: right;

@@ -1,26 +1,27 @@
-nav .nav-wrapper {
+#navBar {
   padding: 1em;
   background-color: #333333;
   color: white;
-  overflow: hidden;
   display: block;
-  height: auto; }
-  nav .nav-wrapper .image-div {
+  height: 6.5em; }
+  #navBar .image-div {
     float: left;
     height: 4.5em; }
-    nav .nav-wrapper .image-div a span {
+    #navBar .image-div a span {
       color: white;
       font-family: GillSans, Trebuchet, sans-serif;
       text-decoration: none !important;
       font-size: 2.1em;
       margin-left: 1em;
       vertical-align: middle; }
-    nav .nav-wrapper .image-div img {
+    #navBar .image-div img {
       height: 100%;
       vertical-align: middle; }
-  nav .nav-wrapper #dropdown1 {
-    margin-top: 1em; }
-  nav .nav-wrapper .heroButton {
+  #navBar #dropdownNavButton {
+    width: 9em; }
+  #navBar #dropdown1 {
+    width: 100%; }
+  #navBar .heroButton {
     float: right;
     margin-left: 2em;
     background-color: #A9A177; }

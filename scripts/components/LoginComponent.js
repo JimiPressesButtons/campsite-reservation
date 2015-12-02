@@ -37,7 +37,7 @@ module.exports = React.createClass({
 	},
 	onLogin: function(e) {
 		e.preventDefault();
-		this.refs.button.disabled = true;
+		console.log(this.refs.email.value)
 		console.log(this.refs.password.value)
 		// var user = new Parse.User();
 		Parse.User.logIn(

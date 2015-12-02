@@ -36,14 +36,6 @@ module.exports = React.createClass({
                                     <input id="lastName" type="text" className="validate" ref="lastName" />
                                     <label htmlFor="lastName">Last Name</label>
                                 </div>
-                                <div className="row">
-                                    {this.state.showFamilyCode ? <div className="input-field col s6">
-                                        <input id="familyCode" type="text" ref="familyCode" />
-                                        <label htmlFor="familyCode">Family Code </label>
-                                    </div> : <div className="optional col s6">Already have a family code, then click here!
-                                        <i className="material-icons">play_arrow</i></div>}
-                                    <a className="btn-floating btn-large waves-effect waves-light" onClick={this.showFamily}><i className="material-icons">add</i></a>
-                                </div>
                                 <button type="submit" className="btn-large waves-effect col s6 heroButton">Sign-Up</button>
                             </div>
                         </form>
@@ -58,7 +50,7 @@ module.exports = React.createClass({
 			{
 				firstName: this.refs.firstName.value,
 				lastName: this.refs.lastName.value,
-				username: this.refs.firstName.value+this.refs.lastName.value,
+				username: this.refs.email.value,
 				password: this.refs.password.value,
 				email: this.refs.email.value,
 			},

@@ -36154,7 +36154,7 @@ module.exports = React.createClass({
 		var _this = this;
 
 		e.preventDefault();
-		this.refs.button.disabled = true;
+		console.log(this.refs.email.value);
 		console.log(this.refs.password.value);
 		// var user = new Parse.User();
 		Parse.User.logIn(this.refs.email.value, this.refs.password.value, {
@@ -36198,7 +36198,8 @@ module.exports = React.createClass({
     },
     render: function render() {
         var currentUser = Parse.User.current();
-        var profileLink = null;
+        var link = [];
+        var dropDownTitle = null;
         React.createElement(
             'ul',
             { id: 'dropdown1', className: 'dropdown-content' },
@@ -36222,68 +36223,88 @@ module.exports = React.createClass({
                 )
             )
         );
-        // if(currentUser){
-
-        // }else{
-        //     var allLinks =[];
-        //     allLinks.push(this.links('login', 'Login'));
-        //     allLinks.push(this.links('signup', 'Sign-Up'));
-        // }
+        if (currentUser) {
+            link.push(React.createElement(
+                'li',
+                { key: 'signout' },
+                React.createElement(
+                    'a',
+                    { href: '#profile' },
+                    'Reservations'
+                )
+            ));
+            link.push(React.createElement(
+                'li',
+                { key: 'signout1' },
+                React.createElement(
+                    'a',
+                    { href: '', onClick: this.signOut },
+                    'Sign-Out'
+                )
+            ));
+        } else {
+            console.log('NO USER');
+            link.push(React.createElement(
+                'li',
+                { key: 'signout' },
+                React.createElement(
+                    'a',
+                    { href: '#signup' },
+                    'New User'
+                )
+            ));
+            link.push(React.createElement(
+                'li',
+                { key: 'signout1' },
+                React.createElement(
+                    'a',
+                    { href: '#login', onClick: this.signOut },
+                    'Previous User'
+                )
+            ));
+        }
         return React.createElement(
             'div',
             { className: 'nav-wrapper' },
             React.createElement(
                 'div',
-                { className: 'image-div' },
+                { id: 'navBar' },
                 React.createElement(
-                    'a',
-                    { href: '#' },
-                    React.createElement('img', { className: 'logo', src: '../../images/tpwd-logo-large.gif' }),
-                    React.createElement(
-                        'span',
-                        null,
-                        'Texas Parks & WildLife'
-                    )
-                )
-            ),
-            React.createElement(
-                'ul',
-                { className: 'right hide-on-med-and-down' },
-                React.createElement(
-                    'li',
-                    null,
+                    'div',
+                    { className: 'image-div' },
                     React.createElement(
                         'a',
-                        { className: 'dropdown-button', href: '#!', 'data-activates': 'dropdown1' },
-                        Parse.User.current().get('firstName'),
+                        { href: '#' },
+                        React.createElement('img', { className: 'logo', src: '../../images/tpwd-logo-large.gif' }),
                         React.createElement(
-                            'i',
-                            { className: 'material-icons right' },
-                            'arrow_drop_down'
+                            'span',
+                            null,
+                            'Texas Parks & WildLife'
                         )
-                    )
-                )
-            ),
-            React.createElement(
-                'ul',
-                { id: 'dropdown1', className: 'dropdown-content' },
-                React.createElement(
-                    'li',
-                    { key: 'signout' },
-                    React.createElement(
-                        'a',
-                        { href: '#profile' },
-                        'My Reservations'
                     )
                 ),
                 React.createElement(
-                    'li',
-                    { key: 'signout' },
+                    'ul',
+                    { className: 'right hide-on-med-and-down' },
                     React.createElement(
-                        'a',
-                        { href: '', onClick: this.signOut },
-                        'Sign-Out'
+                        'li',
+                        { id: 'dropdownNavButton' },
+                        React.createElement(
+                            'a',
+                            { className: 'dropdown-button', href: '#!', 'data-activates': 'dropdown1' },
+                            currentUser ? Parse.User.current().get('firstName') : 'Login',
+                            React.createElement(
+                                'i',
+                                { className: 'material-icons right' },
+                                'arrow_drop_down'
+                            )
+                        )
                     )
+                ),
+                React.createElement(
+                    'ul',
+                    { id: 'dropdown1', className: 'dropdown-content' },
+                    link
                 )
             )
         );
@@ -37054,38 +37075,6 @@ module.exports = React.createClass({
                             )
                         ),
                         React.createElement(
-                            'div',
-                            { className: 'row' },
-                            this.state.showFamilyCode ? React.createElement(
-                                'div',
-                                { className: 'input-field col s6' },
-                                React.createElement('input', { id: 'familyCode', type: 'text', ref: 'familyCode' }),
-                                React.createElement(
-                                    'label',
-                                    { htmlFor: 'familyCode' },
-                                    'Family Code '
-                                )
-                            ) : React.createElement(
-                                'div',
-                                { className: 'optional col s6' },
-                                'Already have a family code, then click here!',
-                                React.createElement(
-                                    'i',
-                                    { className: 'material-icons' },
-                                    'play_arrow'
-                                )
-                            ),
-                            React.createElement(
-                                'a',
-                                { className: 'btn-floating btn-large waves-effect waves-light', onClick: this.showFamily },
-                                React.createElement(
-                                    'i',
-                                    { className: 'material-icons' },
-                                    'add'
-                                )
-                            )
-                        ),
-                        React.createElement(
                             'button',
                             { type: 'submit', className: 'btn-large waves-effect col s6 heroButton' },
                             'Sign-Up'
@@ -37103,7 +37092,7 @@ module.exports = React.createClass({
         user.signUp({
             firstName: this.refs.firstName.value,
             lastName: this.refs.lastName.value,
-            username: this.refs.firstName.value + this.refs.lastName.value,
+            username: this.refs.email.value,
             password: this.refs.password.value,
             email: this.refs.email.value
         }, {
